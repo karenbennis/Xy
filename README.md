@@ -1,2 +1,3 @@
-# Xy
-Group project: NLP to predict Yelp star ratings
+# Xy (Group project: NLP to predict Yelp star ratings)
+
+## Project Overvidew
