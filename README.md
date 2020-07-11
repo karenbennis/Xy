@@ -94,6 +94,6 @@ Note: Tasks that are not assigned to anyone in particular are not converted to i
 7. Create a pull request to merge with the master branch.
 8. All team members review the pull request and approve.
 9. Merge with master branch.
-10. When work is completed (merged to master branch), move task card to "Done".
+10. When work is completed (merged to master branch), GitHub will automatically move task card to "Done".
 
-Note: We have implemented a 4-person review requirement for merging with the master branch in hopes of preventing merge conflicts. This also ensures that everyone on the team has line of sight as to what is pushed to the master branch.
+Note: We have implemented a 3-person review requirement for merging with the master branch in hopes of preventing merge conflicts. This also ensures that everyone on the team has line of sight as to what is pushed to the master branch.
