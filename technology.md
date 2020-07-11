@@ -12,12 +12,13 @@ The following will be used to clean the data and perform an exploratory analysis
 Google Cloud Postgres is the database we intend to use to store our data. PgAdmin will be the front-end user interface.
 
 ## Machine Learning
-SciKitLearn and TensorFlow are the ML library we'll be using to create a classifier. We will run our initial model using Naive Bayesian. To demonstrate which model best fits this project, we will run a few other models to display their comparisons.
+SciKitLearn and TensorFlow are the ML library we'll be using to create a classifier. We will run our initial model using Naive Bayes. To demonstrate which model best fits this project, we will run a few other models to display their comparisons.
 
 1. Linear Regression
 2. Logistic Regression
-3. Random Forest Classifier
-4. Neural Network
+3. Support Vector Machines (SVM)
+4. Random Forest Classifier
+5. Neural Network
 
 ## Dashboard
 The following are potential options for our dashboard. 
