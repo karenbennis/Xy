@@ -1,4 +1,4 @@
-# Xy (Group project: NLP to predict Yelp star ratings)
+# Xy (Group project: NLP to predict Yelp rating sentiment)
 
 ## Project Overview
 As part of the UofT Data Analytics Bootcamp, the final deliverable is group project in which team members collaborate to synthesize and showcase the various skills learned throughout this intensive 6-month course.
