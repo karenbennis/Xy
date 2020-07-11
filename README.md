@@ -7,6 +7,7 @@ Python is used to clean, prepare, and explore the data, and it is used to comple
 
 Postgres database integration is used to store the cleaned data. Machine learning is implemented to enhance the topic. JavaScript is used to build a dashboard for presenting the results. Finally, the team prepared and delivered a presentation that walked the class through the project, step by step.
 
+### Schedule
 The project is broken down into the following 4 segments (over the course of 4 weeks):
 
 |Week|Segment|Description|
@@ -15,12 +16,6 @@ The project is broken down into the following 4 segments (over the course of 4 w
 |2|Build the Pieces|Train the model and build out the database that will be used for the final presentation.|
 |3|Plug It In|Connect the final database to the model, continue to train the model, and create the dashboard and presentation.|
 |4|Put It All Together|Put the final touches on your model, database, and dashboard. Lastly, create and deliver your final presentation to your class.|
-
-The team is comprised of the following individuals:
-- Blake Belnap (https://github.com/blocrunx)
-- Helen Ly (https://github.com/Helen-Ly)
-- Jasmeer Sangha (https://github.com/JasmeerSangha)
-- Karen Bennis (https://github.com/karenbennis)
 
 ### Topic
 Team Xy has decided to apply natural language processing (NLP) and machine learning techniques for the purpose of identifying sentiment to classify Yelp reviews into binary categories ("positive review" / "negative review") based on text content in the reviews.
@@ -51,3 +46,29 @@ https://www.kaggle.com/omkarsabnis/yelp-reviews-dataset/kernels
 - Can NLP be used to predict sentiment of Yelp reviews?
 - Can accuracy of NLP model be improved by using larger datasets?
 - Can other models predict Yelp sentiment with better accuracy than Naive Bayes model?
+
+## Communication Protocols
+
+### Team Xy members
+The team is comprised of the following individuals:
+- Blake Belnap (https://github.com/blocrunx)
+- Helen Ly (https://github.com/Helen-Ly)
+- Jasmeer Sangha (https://github.com/JasmeerSangha)
+- Karen Bennis (https://github.com/karenbennis)
+
+### Communication technologies
+- Slack
+- Whatsapp
+- Zoom
+- GitHub
+
+### Communication strategies
+Our team collaborates 100% remotely. The COVID 19 pandemic has created a set of circumstances such that we are not able to meet in person at any point in time during this project. From the get-go, we knew that group chats would be paramount to our success.
+
+We are using the following group chats to communicate in writing:
+- Slack (private channel)
+- Whatsapp (private group, as contingency for Slack)
+
+We are using Zoom meetings for "in-person" meetings
+
+We are operating as a pseudo-agile team (since we have no product owner). Each week we swap roles in terms of deliverables preparation; however, we are all deeply involved in group discussions on every decision for every deliverable. Much of these decisions are made in the Zoom meetings. Tasks are added to the project board on GitHub. Tasks that are not assigned to anyone in particular are not converted to issues. Tasks which are assigned to one team member are converted to issues so they can be assigned to the specific team member. That team member creates a branch for themselves to work on that task. This way, there is traceability. When the team member completes the task, they commit the changes and create a pull request to merge with the master branch. We have implemented a 4-person review requirement for merging with the master branch. This way, we aim to prevent merge conflicts, and everyone on the team has line of sight as to what is pushed to the master branch. Once the task is completed and merge with the master, the task will be moved on the project board to "Done".
