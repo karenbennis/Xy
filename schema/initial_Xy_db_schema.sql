@@ -14,7 +14,7 @@ CREATE TABLE business(
 	review_id VARCHAR NOT NULL,
 	business_id VARCHAR NOT NULL,
 	FOREIGN KEY (review_id) REFERENCES review (review_id),
-	PRIMARY KEY (review_id, business_id)
+	PRIMARY KEY (review_id)
 );
 
 CREATE TABLE yelp_user(
