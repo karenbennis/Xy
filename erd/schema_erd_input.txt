@@ -1,0 +1,22 @@
+review as r
+-
+review_id PK TEXT
+text TEXT
+stars INT
+cool INT
+useful INT
+funny INT
+date DATE
+type VARCHAR
+
+user
+-
+user_id  TEXT
+review_id PK TEXT FK -< r.review_id
+
+business
+-
+business_id  TEXT
+review_id PK TEXT FK -< r.review_id
+
+

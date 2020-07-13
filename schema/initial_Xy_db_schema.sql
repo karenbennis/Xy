@@ -23,3 +23,10 @@ CREATE TABLE yelp_user(
 	FOREIGN KEY (review_id) REFERENCES review (review_id),
 	PRIMARY KEY (review_id)
 );
+
+CREATE TABLE review_class(
+	review_id VARCHAR NOT NULL,
+	class FLOAT,
+	FOREIGN KEY (review_id) REFERENCES review (review_id),
+	PRIMARY KEY (review_id)
+);
