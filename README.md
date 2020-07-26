@@ -17,6 +17,13 @@ The project was broken down into the following 4 segments (over the course of 4 
 |3|Plug It In|Connect the final database to the model, continue to train the model, and create the dashboard and presentation.|
 |4|Put It All Together|Put the final touches on your model, database, and dashboard. Lastly, create and deliver your final presentation to your class.|
 
+#### Team Xy members
+The team is comprised of the following individuals:
+- Blake Belnap (https://github.com/blocrunx)
+- Helen Ly (https://github.com/Helen-Ly)
+- Jasmeer Sangha (https://github.com/JasmeerSangha)
+- Karen Bennis (https://github.com/karenbennis)
+
 ### Topic
 Team Xy has decided to apply natural language processing (NLP) and machine learning techniques for the purpose of identifying sentiment to classify Yelp reviews into binary categories ("positive review" / "negative review") and multiclass categories ("positive" / "neutral" / "negative") and ("1 star" / "2 star" / "3 star" / "4 star" / "5 star") based on text content in the reviews.
 
@@ -27,14 +34,14 @@ When this topic was covered, the course content covered the ETL process. This pr
 
 As a group we wanted to select a topic that had universal appeal. We agreed that Yelp reviews would be interesting since everyone has an opinion about services and products!
 
-Originally, we'd hoped to build a model for predicting the exact number of stars based on NLP machine learning; however, we opted to include binary classification as well as multiclass categories where there are 3 classes instead of 5 classes. The decision to include binary and 3-category classification was due to the model predictions were initially quite low in terms of accuracy when predicting the exact number of stars.
+Originally, we'd hoped to build a model for predicting the exact number of stars based on NLP machine learning; however, we opted to include binary classification as well as multiclass categories where there are 3 classes in addition to 5 classes. The decision to include binary and 3-category classification was due to the model predictions were initially quite low in terms of accuracy when predicting the exact number of stars.
 
 ### Research questions
 - Can NLP be used to predict sentiment of Yelp reviews?
 - Can accuracy of NLP model be improved by using larger datasets?
 - Can other models predict Yelp sentiment with better accuracy than Naive Bayes model?
 
-### Description of data source
+### Data source
 #### Raw Dataset (big data)
 
 https://www.kaggle.com/shikhar42/yelps-dataset?select=yelp_review.csv
@@ -49,7 +56,7 @@ https://www.kaggle.com/omkarsabnis/yelp-reviews-dataset
 - The dataset has same columns as large dataset, which makes for good sample data for testing our initial NLP model
 - This dataset does not have an equal distribution of reviews corresponding with each star rating
 
-### Description of exploratory analysis phase
+### Exploratory analysis phase
 Using the sample dataset, the exploratory analysis and plotting revealed that there was an uneven distribution of reviews across the different star ratings, with most of the set being 4 and 5-star reviews. Despite the imbalance, we created various plots that looked at review text length, useful votes, cool votes, and funny votes to see if there were patterns that could be observed on the basis of star rating.
 
 We discovered immediately that there did not appear to be much variation between a 1-star review and a 5-star review across all metrics.
@@ -60,14 +67,10 @@ Unfortunately, the resampled data showed similar patterns to those observed in t
 
 We concluded that star rating does not seem to influence any of the factors considered in such a profound way. At a higher level, this demonstrates the need for NLP analysis to predict sentiment.
 
-### Communication Protocols
+### Machine learning model
 
-#### Team Xy members
-The team is comprised of the following individuals:
-- Blake Belnap (https://github.com/blocrunx)
-- Helen Ly (https://github.com/Helen-Ly)
-- Jasmeer Sangha (https://github.com/JasmeerSangha)
-- Karen Bennis (https://github.com/karenbennis)
+
+### Communication Protocols
 
 #### Communication technologies
 - Slack
