@@ -1,4 +1,4 @@
-review as r
+review_two as r
 -
 review_id PK TEXT
 text TEXT
@@ -7,16 +7,31 @@ cool INT
 useful INT
 funny INT
 date DATE
-type VARCHAR
 
-user
+
+user_two as u
 -
 user_id  TEXT
 review_id PK TEXT FK -< r.review_id
 
-business
+business_two
 -
 business_id  TEXT
 review_id PK TEXT FK -< r.review_id
 
+user_reviews
+-
+review_id PK TEXT FK - r.review_id
+text TEXT
+stars INT
+cool INT
+useful INT
+funny INT
+date DATE
+user_id  TEXT FK >- u.user_id
+
+review_class
+-
+review_id PK TEXT FK >- r.review_id
+class INT
 
