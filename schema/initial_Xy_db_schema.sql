@@ -43,18 +43,6 @@ INTO user_review
 FROM review_two
 INNER JOIN yelp_user_two
 ON review_two.review_id = yelp_user_two.review_id;
-	review_two.review_id,
-	review_two.review_text,
-	review_two.stars,
-	review_two.cool,
-	review_two.useful,
-	review_two.funny,
-	review_two.review_date
-	INTO user_review
-	FROM review_two
-	INNER JOIN yelp_user_two
-	ON review_two.review_id = yelp_user_two.review_id;
-	
 	
 	
 	
