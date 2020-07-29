@@ -10,16 +10,26 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 # assume you have a "long-form" data frame
 # see https://plotly.com/python/px-arguments/ for more options
-df = pd.DataFrame({
-    "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-    "Amount": [4, 1, 2, 2, 4, 5],
-    "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-})
+# df = pd.DataFrame({
+#     "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
+#     "Amount": [4, 1, 2, 2, 4, 5],
+#     "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
+# })
 
-fig = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
+# Set the file path
+file_path = 'uniform_yelp.csv'
+
+# Read in data from csv
+df = pd.read_csv(file_path)
+
+stars_count = df.stars.value_counts()
+
+star_count_df = pd.DataFrame(stars_count).sort_index()
+
+fig = px.bar(star_count_df, y=["stars"], barmode="group")
 
 app.layout = html.Div(children=[
-    html.H1(children='Hello Dash'),
+    html.H1(children='Xy Dashboard'),
 
     html.Div(children='''
         Dash: A web application framework for Python.
