@@ -59,9 +59,12 @@ navbar = dbc.Navbar(
 """Navbar End"""
 
 #############################################################
+# Body
+#############################################################
+
 """App Components"""
 
-DropdownApp = dbc.DropdownMenu(
+dropdown_app = dbc.DropdownMenu(
     label="Select a Model",
     children=[
         dbc.DropdownMenuItem("Naive Bayes"),
@@ -73,17 +76,48 @@ DropdownApp = dbc.DropdownMenu(
 
 text_input = html.Div(
     [
-        dbc.Label("Try it Yourself"),
-        dbc.Input(id="input", placeholder="Type a review...", type="text"),
+        #dbc.Label("Try it Yourself"),
+        dbc.Input(id="input", placeholder="Write a review...", type="text"),
         html.Br(),
         html.P(id="output"),
     ]
 )
 
+"""Cards"""
+
+# Card 1
+card = dbc.Card(
+    [
+        dbc.CardImg(src="/static/images/ai_brain.jpeg", top=True),
+        dbc.CardBody(
+            [
+                html.H4("Machine Learning Models", className="card-title"),
+                html.P(
+                    "An application allowing users to input their own text "
+                    "to see how well the different models classify their sentiment.",
+                    className="card-text",
+                ),
+                dbc.Button("Launch Application", color="primary", id="open", style={'margin':'auto','width':'100%'}),
+                dbc.Modal(
+                [
+                    dbc.ModalHeader("Try it Yourself!"),
+                    dbc.ModalBody(dropdown_app),
+                    dbc.ModalBody(text_input),
+                    dbc.ModalFooter(
+                        dbc.Button("Close", id="close", className="ml-auto")
+                    ),
+                ],
+                id="modal",
+            )
+            ]
+        ),
+    ],
+    style={"width": "18rem"},
+)
 
 """ Final Layout Render"""
 app.layout = html.Div(
-    [navbar, DropdownApp, text_input]
+    [navbar, card]
 )
 
 
@@ -131,6 +165,16 @@ def toggle_navbar_collapse(n, is_open):
 def output_text(value):
     return value
 
+# Modal 1
+@app.callback(
+    Output("modal", "is_open"),
+    [Input("open", "n_clicks"), Input("close", "n_clicks")],
+    [State("modal", "is_open")],
+)
+def toggle_modal(n1, n2, is_open):
+    if n1 or n2:
+        return not is_open
+    return is_open
 
 """End App Callback"""
 
