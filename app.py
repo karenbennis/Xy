@@ -68,10 +68,10 @@ navbar = dbc.Navbar(
 dropdown_app = dbc.DropdownMenu(
     label="Select a Model",
     children=[
-        dbc.DropdownMenuItem("Naive Bayes"),
-        dbc.DropdownMenuItem("Logistic Regression"),
-        dbc.DropdownMenuItem("Neural Net"),
-        dbc.DropdownMenuItem("Outside Model")
+        dbc.DropdownMenuItem("Naive Bayes", id="Naive-button"),
+        dbc.DropdownMenuItem("Logistic Regression", id="logistic-button"),
+        dbc.DropdownMenuItem("Neural Net", id="neu-button"),
+        dbc.DropdownMenuItem("Outside Model", id="outside-button")
     ],
 )
 
@@ -87,12 +87,18 @@ text_input = html.Div(
 
 ## Dataset dropdown app ##
 
-data_set_dropdown = dbc.DropdownMenu(
-    label="Select Dataset",
-    children=[
-        dbc.DropdownMenuItem("Unbalanced"),
-        dbc.DropdownMenuItem("Balanced"),
-        dbc.DropdownMenuItem("Scaled"),
+data_set_dropdown = html.Div(
+    [
+        dcc.Dropdown(
+        id='dataset_dropdown',
+        options=[
+            {'label': 'Balanced Dataset', 'value': '1'},
+            {'label': 'Unbalanced Dataset', 'value': '2'},
+            {'label': 'Scaled Dataset', 'value': '3'}
+        ],
+        value='1'
+    ),
+    html.Div(id='dd-output-container')
     ],
 )
 
@@ -104,6 +110,16 @@ file_path = 'uniform_yelp.csv'
 
 # Read in data from csv
 df = pd.read_csv(file_path)
+df['length'] = df['text'].apply(len)
+df = df.loc[df['length'] < 3200]
+# Create df for each star
+one_star_df = df.loc[df['stars'] == 1]
+two_star_df = df.loc[df['stars'] == 2]
+three_star_df = df.loc[df['stars'] == 3]
+four_star_df = df.loc[df['stars'] == 4]
+five_star_df = df.loc[df['stars'] == 5]
+
+
 
 # Get the number of times each star rating appears in dataset
 stars_count = df.stars.value_counts()
@@ -112,11 +128,33 @@ star_count_df = pd.DataFrame(stars_count).sort_index()
 # Initialize bar chart object
 fig = px.bar(star_count_df, y=["stars"], barmode="group")
 
-# Create the plot
+# # Create the plot
 explore_graph_app = dcc.Graph(
-        id='explore-graph',
+        id='explore_graph',
         figure=fig
     )
+
+## Graph two app ##
+# Create plot adding each figure individually so the color of each marker can be changed
+
+trace_1 = go.Box(x=one_star_df['stars'], y=one_star_df['length'], marker_color='royalblue', boxmean='sd')
+trace_2 = go.Box(x=two_star_df['stars'], y=two_star_df['length'], marker_color='royalblue', boxmean='sd')
+trace_3 = go.Box(x=three_star_df['stars'], y=three_star_df['length'], marker_color='royalblue', boxmean='sd')
+trace_4 = go.Box(x=four_star_df['stars'], y=four_star_df['length'], marker_color='royalblue', boxmean='sd')
+trace_5 = go.Box(x=five_star_df['stars'], y=five_star_df['length'], marker_color='royalblue', boxmean='sd')
+
+data = [trace_1, trace_2, trace_3, trace_4, trace_5]
+box_layout = go.Layout(
+    title = "Length of Review per Star Rating"
+)
+
+fig2 = go.Figure(data=data, layout=box_layout)
+
+# Create the boxplot
+box_plot_graph = dcc.Graph(
+    figure=fig2
+)
+
 
 ## Tab one app for Graph ##
 tab1_app = dbc.Card(
@@ -126,16 +164,18 @@ tab1_app = dbc.Card(
         ]
     ),
     className="mt-3",
+    id='first_tab',
 )
 
 ## Tab two app for Graph ##
 tab2_app = dbc.Card(
     dbc.CardBody(
         [
-            html.P("tab two :(", className="card-text")
+            box_plot_graph
         ]
     ),
     className="mt-3",
+    id='second_tab',
 )
 
 ## Parent tabs app ##
@@ -165,6 +205,7 @@ card = dbc.Card(
                 html.Br(),
                 text_input,
                 dbc.Button("Predict Rating", color="primary", id="open", style={'margin':'auto','width':'100%'}),
+                
             #     dbc.Modal(
             #     [
             #         dbc.ModalHeader("Try it Yourself!"),
@@ -230,16 +271,30 @@ def toggle_navbar_collapse(n, is_open):
 def output_text(value):
     return value
 
-# # Modal 1
+# # Dataset Dropdown
 # @app.callback(
-#     Output("modal", "is_open"),
-#     [Input("open", "n_clicks"), Input("close", "n_clicks")],
-#     [State("modal", "is_open")],
+#     Output("explore_graph", "figure"),
+#     [Input("dataset_dropdown", "value")],
 # )
-# def toggle_modal(n1, n2, is_open):
-#     if n1 or n2:
-#         return not is_open
-#     return is_open
+# def update_fig(value):
+#     data=[]
+#     if value:
+#         file_path = 'yelp.csv'
+#         df2 = pd.read_csv(file_path)
+#         df2['length'] = df['text'].apply(len)
+#         df2 = df.loc[df['length'] < 3200]
+#         # Get the number of times each star rating appears in dataset
+#         stars_count = df2.stars.value_counts()
+#         star_count_df = pd.DataFrame(stars_count).sort_index()
+
+#         # Initialize bar chart object
+#         fig = px.bar(star_count_df, y=["stars"], barmode="group")
+#         # Create the plot
+#         dataset_callback = dcc.Graph(
+#             figure=fig
+#         )
+#         data.append(dataset_callback)
+#     return {'data': data}
 
 """End App Callback"""
 
