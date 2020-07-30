@@ -77,7 +77,7 @@ dropdown_app = dbc.DropdownMenu(
 text_input = html.Div(
     [
         #dbc.Label("Try it Yourself"),
-        dbc.Input(id="input", placeholder="Write a review...", type="text"),
+        dbc.Textarea(id="input", placeholder="Write a review...",),
         html.Br(),
         html.P(id="output"),
     ]
@@ -88,31 +88,34 @@ text_input = html.Div(
 # Card 1
 card = dbc.Card(
     [
-        dbc.CardImg(src="/static/images/ai_brain.jpeg", top=True),
+        dbc.CardImg(src="/static/images/ml_text_banner.jpeg", top=True),
         dbc.CardBody(
             [
-                html.H4("Machine Learning Models", className="card-title"),
+                html.H4("What the Dilly with That There Machine Learnin' Stuff", className="card-title"),
                 html.P(
-                    "An application allowing users to input their own text "
-                    "to see how well the different models classify their sentiment.",
+                    "A widget allowing users to test different machine learning models' "
+                    "ability to classify their sentiment.",
                     className="card-text",
                 ),
-                dbc.Button("Launch Application", color="primary", id="open", style={'margin':'auto','width':'100%'}),
-                dbc.Modal(
-                [
-                    dbc.ModalHeader("Try it Yourself!"),
-                    dbc.ModalBody(dropdown_app),
-                    dbc.ModalBody(text_input),
-                    dbc.ModalFooter(
-                        dbc.Button("Close", id="close", className="ml-auto")
-                    ),
-                ],
-                id="modal",
-            )
+                dropdown_app,
+                html.Br(),
+                text_input,
+                dbc.Button("Predict Rating", color="primary", id="open", style={'margin':'auto','width':'100%'}),
+            #     dbc.Modal(
+            #     [
+            #         dbc.ModalHeader("Try it Yourself!"),
+            #         dbc.ModalBody(dropdown_app),
+            #         dbc.ModalBody(text_input),
+            #         dbc.ModalFooter(
+            #             dbc.Button("Close", id="close", className="ml-auto")
+            #         ),
+            #     ],
+            #     id="modal",
+            # )
             ]
         ),
     ],
-    style={"width": "18rem"},
+    style={"width": "45rem"},
 )
 
 """ Final Layout Render"""
@@ -165,16 +168,16 @@ def toggle_navbar_collapse(n, is_open):
 def output_text(value):
     return value
 
-# Modal 1
-@app.callback(
-    Output("modal", "is_open"),
-    [Input("open", "n_clicks"), Input("close", "n_clicks")],
-    [State("modal", "is_open")],
-)
-def toggle_modal(n1, n2, is_open):
-    if n1 or n2:
-        return not is_open
-    return is_open
+# # Modal 1
+# @app.callback(
+#     Output("modal", "is_open"),
+#     [Input("open", "n_clicks"), Input("close", "n_clicks")],
+#     [State("modal", "is_open")],
+# )
+# def toggle_modal(n1, n2, is_open):
+#     if n1 or n2:
+#         return not is_open
+#     return is_open
 
 """End App Callback"""
 
