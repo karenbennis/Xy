@@ -64,6 +64,7 @@ navbar = dbc.Navbar(
 
 """App Components"""
 
+## Machine learning dropdown app ##
 dropdown_app = dbc.DropdownMenu(
     label="Select a Model",
     children=[
@@ -74,6 +75,7 @@ dropdown_app = dbc.DropdownMenu(
     ],
 )
 
+## Machine learning text area app ##
 text_input = html.Div(
     [
         #dbc.Label("Try it Yourself"),
@@ -82,6 +84,68 @@ text_input = html.Div(
         html.P(id="output"),
     ]
 )
+
+## Dataset dropdown app ##
+
+data_set_dropdown = dbc.DropdownMenu(
+    label="Select Dataset",
+    children=[
+        dbc.DropdownMenuItem("Unbalanced"),
+        dbc.DropdownMenuItem("Balanced"),
+        dbc.DropdownMenuItem("Scaled"),
+    ],
+)
+
+
+## Graph one app ##
+
+# Set the file path
+file_path = 'uniform_yelp.csv'
+
+# Read in data from csv
+df = pd.read_csv(file_path)
+
+# Get the number of times each star rating appears in dataset
+stars_count = df.stars.value_counts()
+star_count_df = pd.DataFrame(stars_count).sort_index()
+
+# Initialize bar chart object
+fig = px.bar(star_count_df, y=["stars"], barmode="group")
+
+# Create the plot
+explore_graph_app = dcc.Graph(
+        id='explore-graph',
+        figure=fig
+    )
+
+## Tab one app for Graph ##
+tab1_app = dbc.Card(
+    dbc.CardBody(
+        [
+            explore_graph_app
+        ]
+    ),
+    className="mt-3",
+)
+
+## Tab two app for Graph ##
+tab2_app = dbc.Card(
+    dbc.CardBody(
+        [
+            html.P("tab two :(", className="card-text")
+        ]
+    ),
+    className="mt-3",
+)
+
+## Parent tabs app ##
+parent_tab_app = dbc.Tabs(
+    [
+        dbc.Tab(tab1_app, label="Tab 1"),
+        dbc.Tab(tab2_app, label="Tab 2"),
+    ]
+)
+
 
 """Cards"""
 
@@ -93,8 +157,8 @@ card = dbc.Card(
             [
                 html.H4("What the Dilly with That There Machine Learnin' Stuff", className="card-title"),
                 html.P(
-                    "A widget allowing users to test different machine learning models' "
-                    "ability to classify their sentiment.",
+                    "An app allowing users to test different machine learning models' "
+                    "ability to classify the sentiment of their review.",
                     className="card-text",
                 ),
                 dropdown_app,
@@ -118,36 +182,34 @@ card = dbc.Card(
     style={"width": "45rem"},
 )
 
-""" Final Layout Render"""
-app.layout = html.Div(
-    [navbar, card]
+# Card 2
+
+card_two = dbc.Card(
+    [
+        dbc.CardBody(
+            [
+                html.H4("Data Exploration", className="card-title"),
+                data_set_dropdown,
+                parent_tab_app,
+                                
+            ]
+        ),
+    ],
+    style={"width": "45rem"},
 )
 
+"""Body"""
+body = html.Div(
+    dbc.Row([
+        dbc.Col(html.Div(card)),
+        dbc.Col(html.Div(card_two))
+    ])
+)
 
-# # Set the file path
-# file_path = 'uniform_yelp.csv'
-
-# # Read in data from csv
-# df = pd.read_csv(file_path)
-
-# stars_count = df.stars.value_counts()
-
-# star_count_df = pd.DataFrame(stars_count).sort_index()
-
-# fig = px.bar(star_count_df, y=["stars"], barmode="group")
-
-# app.layout = html.Div(children=[
-#     html.H1(children='Data Exploration'),
-
-#     html.Div(children='''
-#         An interactive web app to explore Machine Learning with Natural Language Processing.
-#     '''),
-
-#     dcc.Graph(
-#         id='example-graph',
-#         figure=fig
-#     )
-# ])
+""" Final Layout Render"""
+app.layout = html.Div(
+    [navbar, body]
+)
 
 """App Callback"""
 
