@@ -1,3 +1,13 @@
+# Decluttering files from master
+.ipynb_checkpoints
+CopyProject.ipynb
+ML_Model_Project_v1.ipynb
+Ml_Model_v1.ipynb
+ml_pandas.ipynb
+pyspark_pipeline_v1.ipynb
+yelp_reviews_ml_v1.ipynb
+
+
 # adding config
 config.py
 # Byte-compiled / optimized / DLL files
