@@ -75,15 +75,15 @@ dropdown_app = dbc.DropdownMenu(
             ],
 )
 
-## Machine learning text area app ##
-text_input = html.Div(
-    [
-        #dbc.Label("Try it Yourself"),
-        dbc.Textarea(id="input", placeholder="Write a review...",),
-        html.Br(),
-        html.P(id="output"),
-    ]
-)
+# ## Machine learning text area app ##
+# text_input = html.Div(
+#     [
+#         #dbc.Label("Try it Yourself"),
+#         dbc.Textarea(id="input", placeholder="Write a review...",),
+#         html.Br(),
+#         html.P(id="output"),
+#     ]
+# )
 
 # ## Dataset dropdown app ##
 # data_set_dropdown = html.Div(
@@ -197,16 +197,17 @@ card = dbc.Card(
         dbc.CardImg(src="/static/images/ml.jpeg", top=True),
         dbc.CardBody(
             [
-                html.H4("What the Dilly with That There Machine Learnin' Stuff", className="card-title"),
+                html.H4("Try it yourself!", className="card-title"),
                 html.P(
-                    "An app allowing users to test different machine learning models' "
-                    "ability to classify the sentiment of their review.",
+                    "Type a review, then select a model, and see how it predicts your sentiment.",
                     className="card-text",
                 ),
                 dropdown_app,
                 html.Br(),
-                text_input,
-                dbc.Button("Predict Rating", color="primary", id="open", style={'margin':'auto','width':'100%'}),           
+                dbc.Textarea(id="input_area", placeholder="Write a review...",),
+                dbc.Button("Predict Rating", color="primary", id="predict_button", style={'margin':'auto','width':'100%'}),
+                html.Br(),
+                html.P(id="output"),        
             ]
         ),
     ],
@@ -258,10 +259,12 @@ card_three = dbc.Card(
     [
         dbc.CardBody(
             [
-                html.P('Just some stuff about the project.')
+                html.P("We applied natural language processing (NLP) and machine learning techniques to identify sentiment to "
+                "classify Yelp reviews into binary categories ('positive review' / 'negative review') and multiclass categories " 
+                "(positive / neutral / negative) and (1 star / 2 star / 3 star / 4 star / 5 star) based on text content in the reviews.")
             ]
         ),
-    ], #style={"width": "45rem"},
+    ], style={"width": "45rem"},
 )
 
 """Body"""
@@ -293,7 +296,7 @@ def toggle_navbar_collapse(n, is_open):
     return is_open
 
 # Text Input App
-@app.callback(Output("output", "children"), [Input("input", "value")])
+@app.callback(Output("output", "children"), [Input("input_area", "value")])
 def output_text(value):
     return value
 
