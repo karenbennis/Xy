@@ -64,16 +64,14 @@ navbar = dbc.Navbar(
 
 """App Components"""
 
-## Machine learning dropdown app ##
-dropdown_app = dbc.DropdownMenu(
-    label="Select a Model",
-    children=[
-                dbc.DropdownMenuItem("Naive Bayes", id="Naive-button"),
-                dbc.DropdownMenuItem("Logistic Regression", id="logistic-button"),
-                dbc.DropdownMenuItem("Neural Net", id="neu-button"),
-                dbc.DropdownMenuItem("Outside Model", id="outside-button")
-            ],
-)
+# ## Machine learning dropdown app ##
+# dropdown_app = dbc.DropdownMenu(
+#     label="Select a Model",
+#     children=[
+#                 dbc.DropdownMenuItem("Naive Bayes", id="naive-button"),
+#                 dbc.DropdownMenuItem("Logistic Regression", id="logistic-button")
+#             ],
+# )
 
 # ## Machine learning text area app ##
 # text_input = html.Div(
@@ -202,10 +200,17 @@ card = dbc.Card(
                     "Type a review, then select a model, and see how it predicts your sentiment.",
                     className="card-text",
                 ),
-                dropdown_app,
+                dbc.DropdownMenu(
+                    label="Select a model",
+                    children=
+                            [
+                                dbc.DropdownMenuItem("Naive Bayes", id="naive-button"),
+                                dbc.DropdownMenuItem("Logistic Regression", id="logistic-button")
+                            ],
+                ),
                 html.Br(),
                 dbc.Textarea(id="input_area", placeholder="Write a review...",),
-                dbc.Button("Predict Rating", color="primary", id="predict_button", style={'margin':'auto','width':'100%'}),
+                dbc.Button("Predict rating", color="primary", id="predict-button", style={'margin':'auto','width':'100%'}),
                 html.Br(),
                 html.P(id="output"),        
             ]
@@ -296,9 +301,18 @@ def toggle_navbar_collapse(n, is_open):
     return is_open
 
 # Text Input App
-@app.callback(Output("output", "children"), [Input("input_area", "value")])
-def output_text(value):
-    return value
+@app.callback(
+            Output("output", "children"), 
+            [Input("input_area", "value"),
+            Input("naive-button", "n_clicks"),
+            Input("logistic-button", "n_clicks"),
+            Input("predict-button", "n_clicks")]
+            )
+
+def output_text(value, n1, n2, n3):
+    if n3: 
+
+        return value
 
 # Dataset Dropdown
 @app.callback(
