@@ -9,6 +9,10 @@ import plotly.graph_objs as go
 from collections import Counter
 import plotly.express as px
 import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
+import numpy as np
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -310,9 +314,84 @@ def toggle_navbar_collapse(n, is_open):
             )
 
 def output_text(value, n1, n2, n3):
-    if n3: 
+    # Import data for ml model
+    ml_file_path = 'static/Resources/ml_app_df.csv'
+    ml_input_df = pd.read_csv(ml_file_path)
+    
+    # print(ml_input_df)
+    
+    # Create object with review data
+    df_x = ml_input_df['cleaned']
+    
+    # print(df_x)
+    
+    # Create object with class(star) data
+    df_y = ml_input_df['class']
+    
+    # print(df_y)
+    
+    # Split data into training and testing
+    X_train,X_test,y_train,y_test = train_test_split(df_x,df_y,test_size=0.2,random_state=41)
+    
+    # Initialize tfidf vectorizer
+    tfidf = TfidfVectorizer(min_df=1)
+    
+    # Fit training data to vectorizer
+    X = tfidf.fit_transform(X_train)
+
+    # Initialize Niave Bayes object
+    mnb = MultinomialNB()
+
+    # Cast y_train as int
+    y_train = y_train.astype('int')
+
+    # Fit Naive Bayes model
+    mnb.fit(X, y_train)
+
+    # Transform X_test
+    X_test = tfidf.transform(X_test)
+
+    # Initialize predict object for testing model accuracy
+    pred = mnb.predict(X_test)
+
+    # Initialize y_test object for testing model accuracy
+    actual = np.array(y_test)
+
+    count=0
+    for i in range(len(pred)):
+        if pred[i] == actual[i]:
+            count+=1
+
+    print(count / len(pred))
+
+
+
+
+    # naive_true = False
+    # logistic_true = False
+    # ctx = dash.callback_context
+    # if not ctx.triggered:
+    #     return " "
+    # # elif ctx.triggered and n3:
+    # #     button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+    
+    # #     return value
+    # elif ctx.triggered and n1 and n3:
+
+
+    #     return value
+    
+    # elif ctx.triggered and n2 and n3:
+
+    #     return value
+    if n3:
 
         return value
+    else:
+        return " "
+
+
+       
 
 # Dataset Dropdown
 @app.callback(
