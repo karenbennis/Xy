@@ -56,8 +56,35 @@ https://www.kaggle.com/omkarsabnis/yelp-reviews-dataset
 - The dataset has same columns as large dataset, which makes for good sample data for testing our initial NLP model
 - This dataset does not have an equal distribution of reviews corresponding with each star rating
 
+### Database setup
+
+#### Considerations
+With regard to the data storage for this project, we felt it was necessary to find a solution that was able to accommodate large storage capacity while still meeting the budget constraints of the project.
+
+Since Google Cloud Storage and Google Cloud SQL allow free egress between the database and Google Colaboratory, we made the decision to store the data files in a Google Could Storage bucket.
+
+#### Setup
+We created a Colab notebook (xy_database_prepper.ipynb) to complete the following tasks:
+
+1. Connect to the Google Cloud Storage bucket.
+2. Load the data file into a PySpark DataFrame.
+3. Change the required data types.
+4. Transform the DataFrame into multiple DataFrames to match the schema.
+5. Load the DataFrames to the Google Cloud SQL database.
+
+#### Accessing the data
+The main Colab notebook Project.ipynb interacts with the database in the following ways:
+1. Connects to the database using Cloud SQL Proxy.
+2. Query the database for required tables.
+3. Join tables into a DataFrame.
+4. Perform data transformation adding a "class" column for the machine learning model.
+5. Load class information to the review_class table in the database.
+
+
 ### Exploratory analysis phase
-Using the sample dataset, the exploratory analysis and plotting revealed that there was an uneven distribution of reviews across the different star ratings, with most of the set being 4 and 5-star reviews. Despite the imbalance, we created various plots that looked at review text length, useful votes, cool votes, and funny votes to see if there were patterns that could be observed on the basis of star rating.
+Using the sample dataset, the exploratory analysis and plotting revealed that there was an uneven distribution of reviews across the different star ratings, with most of the set being 4 and 5-star reviews.
+
+Despite the imbalance, we created various plots that looked at review text length, useful votes, cool votes, and funny votes to see if there were patterns that could be observed on the basis of star rating.
 
 We discovered immediately that there did not appear to be much variation between a 1-star review and a 5-star review across all metrics.
 
@@ -65,10 +92,10 @@ In hopes of discovering more compelling patterns that might exist, we decided to
 
 Unfortunately, the resampled data showed similar patterns to those observed in the sample dataset.
 
-We concluded that star rating does not seem to influence any of the factors considered in such a profound way. At a higher level, this demonstrates the need for NLP analysis to predict sentiment.
+We concluded that star rating does not seem to relate to any of the factors considered in such a profound way. At a higher level, this demonstrates the need for NLP analysis to predict sentiment.
 
 ### Machine Learning Model
-#### Preliminary data preprocessing
+#### Data preprocessing
 In the beginning we looked at the distribution of star ratings and noticed that it was unevenly split. As we transformed and ran the data through our models, the accuracy was less than 20%, which was unacceptable since the odds of guessing without any machine learning is 20%. We supposed that perhaps there was not enough data for the model to train on for the 1 star and 2 stars reviews. We then decided to sample the data and pull 1000 rows for each star rating. This number was later increased to 2000 per star since we knew Colab could handle 10,000 rows.
 Since our plan was to train binary, 3-category, and 5-category models, we created 3 different DataFrames. The following table describes the 3 DataFrames we created.
 |DataFrame|Description|
@@ -77,20 +104,30 @@ Since our plan was to train binary, 3-category, and 5-category models, we create
 |3-category|1-star: Negative(2), 2-stars: Dropped from DataFrame, 3-stars: Neutral(1), 4-stars: Dropped from DataFrame, 5-stars: Positive(0)|
 |5-category|1-star: (3), 2-stars:(4), 3-stars: (2), 4-stars: (0), 5-stars: (1)|
 
-#### Prelminary feature engineering and selection (decision process)
-As part of transforming the data, we went through the NLP process of tokenizing, removing stop words, hashing the data to fit and transform our DataFrame. As we looked more closely after cleaning the data, we determined punctuation had not been removed and there were approximately 62,000 unique columns representing the unique words. This was affecting performance and we needed to further reduce dimensionality. To do this, we employed latent semantic analysis techniques, including stemming and lemmatization.
+#### Feature engineering and selection (decision process)
+As part of transforming the data, we went through the NLP process of tokenizing, removing stop words, hashing the data to fit and transform our DataFrame. As we looked more closely after cleaning the data, we determined punctuation had not been removed and there were approximately 62,000 unique columns representing the unique words.
+
+This was affecting performance and we needed to further reduce dimensionality. To do this, we employed latent semantic analysis techniques, including stemming and lemmatization.
 
 #### Splitting data into training and testing sets
-We have split 80% of the data for the training set and the remaining 20% for the testing set. Our decision to use 80% as opposed to something more modest was based on the idea that there would be enough data for our model to train on. From our research of similar studies, we could see that other people attempting to do similar work did not achieve higher accuracy in prediction of sentiment using NLP.
+We split 80% of the data for the training set and the remaining 20% for the testing set. Our decision to use 80% as opposed to something more modest was based on the idea that there would be enough data for our model to train on.
+
+From our research of similar studies, we could see that other people attempting to do similar work did not achieve higher accuracy in prediction of sentiment using NLP.
 
 #### Model choice
-The top choice for the 5-category classification model was the Neural Network model since there are 5 unique categories. Unfortuntately, at this point in time, it has not been possible to run the Neural Network model in Colab. While we continue to brainstorm ways to run this model, we have run the Naive Bayes and Logisitic Regression models. 
-As we continue our project life-cycle, we will strive to find a way to run the Neural Network Model. At least for the time being, we will be able to compare the Naive Bayes and Logistic Regression models for all 3 cleaned DataFrames described above. We chose Naive Bayes because of its reputation for being simple, fast, accurate, reliable, and that it works particularly well with NLP problems. Similarly, Logistic Regression scales nicely between 1 or more predictors. 
-So far, the limitations is as follows:
+The top choice for the 5-category classification model was the Neural Network model since there are 5 unique categories. Unfortuntately, at this point in time, it has not been possible to run the Neural Network model in Colab. While we continue to brainstorm ways to run this model, we have run the Naive Bayes and Logisitic Regression models.
+
+As we continued throughout project life-cycle, we strived to find a way to run the Neural Network Model. Unfortunately, we were not successful.
+
+We were, however, able to compare the Naive Bayes and Logistic Regression models for all 3 cleaned DataFrames described above.
+
+We chose Naive Bayes because of its reputation for being simple, fast, accurate, reliable, and that it works particularly well with NLP problems. Similarly, Logistic Regression scales nicely between 1 or more predictors.
+
+The limitations were as follows:
 - The Neural Network model requires too much RAM in Colab
 - The large dataset we intended to use was proved to be too much for Colab
 
-#### Preliminary observations
+#### Observations
 Based on what we were able to run so far, we have observed that the acurracy decreases as we increase the number of categories (applicable for all models). The large dataset sample seems to include entries that may not be English. Based on the preliminary data exploration, it seems reviewers may not be expressing themselves in writing in a way that clearly represents their sentiment in terms of star rating.
 
 ### Communication Protocols
