@@ -12,11 +12,69 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_model import LogisticRegression
 import numpy as np
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+
+# Read in ml model
+# Import data for ml model
+ml_file_path = 'static/Resources/ml_app_df.csv'
+ml_input_df = pd.read_csv(ml_file_path)
+
+# print(ml_input_df)
+
+# Create object with review data
+df_x = ml_input_df['cleaned']
+
+# print(df_x)
+
+# Create object with class(star) data
+df_y = ml_input_df['class']
+
+# print(df_y)
+
+# Split data into training and testing
+X_train,X_test,y_train,y_test = train_test_split(df_x,df_y,test_size=0.2,random_state=41)
+
+# Initialize tfidf vectorizer
+tfidf = TfidfVectorizer(min_df=1)
+
+# Fit training data to vectorizer
+X = tfidf.fit_transform(X_train)
+
+# Initialize Niave Bayes object
+mnb = MultinomialNB()
+
+# Cast y_train as int
+y_train = y_train.astype('int')
+
+# Fit Naive Bayes model
+mnb.fit(X, y_train)
+
+# Transform X_test
+X_test = tfidf.transform(X_test)
+
+# Initialize predict object for testing model accuracy
+pred = mnb.predict(X_test)
+
+# Initialize y_test object for testing model accuracy
+actual = np.array(y_test)
+
+### For logistic regression
+
+# Initialize logistic regression object
+logr = LogisticRegression()
+
+# Fit logistic regression model
+logr.fit(X,y_train)
+
+count=0
+for i in range(len(pred)):
+    if pred[i] == actual[i]:
+        count+=1
 
 """Navbar"""
 
@@ -44,7 +102,7 @@ navbar = dbc.Navbar(
             dbc.Row(
                 [
                     dbc.Col(html.Img(src=yelp_logo, height="70px")),
-                    dbc.Col(dbc.NavbarBrand("Yelp Sentiment Analysis", className="ml-2")),
+                    dbc.Col(dbc.NavbarBrand("NLP Sentiment Analysis of Yelp Reviews", className="ml-2")),
                 ],
                 align="center",
                 no_gutters=True,
@@ -57,7 +115,7 @@ navbar = dbc.Navbar(
     ),
     color="dark",
     dark=True,
-    className='mb-5'
+    className='mb-3'
 )
 
 """Navbar End"""
@@ -204,23 +262,33 @@ card = dbc.Card(
                     "Type a review, then select a model, and see how it predicts your sentiment.",
                     className="card-text",
                 ),
-                dbc.DropdownMenu(
-                    label="Select a model",
-                    children=
+                html.Div(
+                    [
+                        dbc.DropdownMenu(
+                            label="Select a model",
+                            children=
+                                    [
+                                        dbc.DropdownMenuItem("Naive Bayes", id="naive-button"),
+                                        dbc.DropdownMenuItem("Logistic Regression", id="logistic-button")
+                                    ],
+                        ),
+                        html.Br(),
+                        dbc.Textarea(id="input_area", placeholder="Write a review...",),
+                        dbc.Row(
                             [
-                                dbc.DropdownMenuItem("Naive Bayes", id="naive-button"),
-                                dbc.DropdownMenuItem("Logistic Regression", id="logistic-button")
-                            ],
+                                dbc.Button("Predict rating", color="primary", id="predict-button", style={'margin':'auto','width':'50%','padding-left':'10px'}),
+                                dbc.Button("Clear prediction to try again", color="primary", id="clear-button", style={'margin':'auto','width':'50%',
+                                    'padding-right':'10px'} )
+                            ]
+                        ),
+                    ],
                 ),
-                html.Br(),
-                dbc.Textarea(id="input_area", placeholder="Write a review...",),
-                dbc.Button("Predict rating", color="primary", id="predict-button", style={'margin':'auto','width':'100%'}),
                 html.Br(),
                 html.P(id="output"),        
             ]
         ),
     ],
-    style={"width": "45rem"},
+    style={"width": "40rem"},
 )
 
 # Card 2
@@ -240,20 +308,25 @@ card_two = dbc.Card(
                     value='0'
                 ),
                 ## Parent tabs app ##
+                html.Br(),
                 dbc.Tabs(
                     [
                         dbc.Tab(label="Star Distribution",
                             id='tab_one',
                             children= 
                                     [
+                                        html.Div(
                                         dcc.Graph(id='tab_one_graph'),
+                                        )
                                     ],  
                         ),             
                         dbc.Tab(label="Length vs Rating",
                             id='tab_two',
                             children=
                                     [
+                                        html.Div(
                                         dcc.Graph(id='tab_two_graph')
+                                        )
                                     ]
                         ),
                     ]
@@ -261,7 +334,7 @@ card_two = dbc.Card(
             ]
         ),
     ],
-    #style={"width": "45rem"},
+    #style={"width": "40rem"},
 )
 
 card_three = dbc.Card(
@@ -273,16 +346,27 @@ card_three = dbc.Card(
                 "(positive / neutral / negative) and (1 star / 2 star / 3 star / 4 star / 5 star) based on text content in the reviews.")
             ]
         ),
-    ], style={"width": "45rem"},
+    ], style={"width": "40rem"},
 )
 
 """Body"""
 body = html.Div(
-    dbc.Row([
-        dbc.Col(html.Div([card_three, card])),
-        dbc.Col(html.Div(card_two))
-        ]
-    )
+    [
+        dbc.Card(
+                    [
+                        dbc.CardBody(
+                            [
+                        
+                                dbc.Row([
+                                    dbc.Col(html.Div([card_three, card])),
+                                    dbc.Col(html.Div(card_two))
+                                    ]
+                                )
+                            ]
+                        )
+                    ], style = {"padding-left":"10px", "padding-right":"10px"},
+        ),
+    ],style = {"padding-left":"10px", "padding-right":"10px"},
 )
 
 """ Final Layout Render"""
@@ -307,65 +391,50 @@ def toggle_navbar_collapse(n, is_open):
 # Text Input App
 @app.callback(
             Output("output", "children"), 
+            
             [Input("input_area", "value"),
             Input("naive-button", "n_clicks"),
             Input("logistic-button", "n_clicks"),
-            Input("predict-button", "n_clicks")]
+            Input("predict-button", "n_clicks")],
+            
             )
 
 def output_text(value, n1, n2, n3):
-    # Import data for ml model
-    ml_file_path = 'static/Resources/ml_app_df.csv'
-    ml_input_df = pd.read_csv(ml_file_path)
     
-    # print(ml_input_df)
+
+    # print(count / len(pred))
     
-    # Create object with review data
-    df_x = ml_input_df['cleaned']
+    if n3 and n1:
+        # Assign text area input to a variable
+        dash_input = [value]
+
+        # Transform input
+        dash_input = tfidf.transform(dash_input)
+
+        # User sentiment prediction for naive bayes
+        user_prediction = mnb.predict(dash_input)
+
+        print(user_prediction)
+        print(value)
+        
+        return user_prediction
     
-    # print(df_x)
-    
-    # Create object with class(star) data
-    df_y = ml_input_df['class']
-    
-    # print(df_y)
-    
-    # Split data into training and testing
-    X_train,X_test,y_train,y_test = train_test_split(df_x,df_y,test_size=0.2,random_state=41)
-    
-    # Initialize tfidf vectorizer
-    tfidf = TfidfVectorizer(min_df=1)
-    
-    # Fit training data to vectorizer
-    X = tfidf.fit_transform(X_train)
+    elif n3 and n2:
+        
 
-    # Initialize Niave Bayes object
-    mnb = MultinomialNB()
+        # Assign text area input to a variable
+        dash_input = [value]
 
-    # Cast y_train as int
-    y_train = y_train.astype('int')
+        # Transform input
+        dash_input = tfidf.transform(dash_input)
 
-    # Fit Naive Bayes model
-    mnb.fit(X, y_train)
+        # User sentiment prediction for logistic regression
+        user_prediction = logr.predict(dash_input)
 
-    # Transform X_test
-    X_test = tfidf.transform(X_test)
+        return user_prediction
 
-    # Initialize predict object for testing model accuracy
-    pred = mnb.predict(X_test)
-
-    # Initialize y_test object for testing model accuracy
-    actual = np.array(y_test)
-
-    count=0
-    for i in range(len(pred)):
-        if pred[i] == actual[i]:
-            count+=1
-
-    print(count / len(pred))
-
-
-
+    else:
+        return " "
 
     # naive_true = False
     # logistic_true = False
@@ -384,14 +453,17 @@ def output_text(value, n1, n2, n3):
     # elif ctx.triggered and n2 and n3:
 
     #     return value
-    if n3:
 
-        return value
-    else:
-        return " "
+@app.callback(
+    
+    [Output("predict-button", "n_clicks"),
+    Output("naive-button", "n_clicks"),],
+    [Input("clear-button", "n_clicks"),]
+    
+)   
 
-
-       
+def clear_clicks(n1):
+    return [0,0]
 
 # Dataset Dropdown
 @app.callback(
