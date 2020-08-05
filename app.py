@@ -85,8 +85,10 @@ logr.fit(X,y_train)
 
 """Navbar"""
 
+# Navbar image location
 yelp_logo = "static/images/yelp_logo.png"
 
+# Hyperlink to master github repo
 nav_item = dbc.NavItem(dbc.NavLink('GitHub', href='https://github.com/karenbennis/Xy'))
 
 # Dropdown menu with links to our portfolios
@@ -101,6 +103,7 @@ dropdown = dbc.DropdownMenu(children=[
     label='Team Repositories'
 )
 
+# Navabar Componten
 navbar = dbc.Navbar(
     
     [
@@ -108,7 +111,10 @@ navbar = dbc.Navbar(
             # Use row and col to control vertical alignment of logo / brand
             dbc.Row(
                 [
+                    # Navbar logo
                     html.Img(src=yelp_logo, height="70px"),
+                    
+                    # Project Title
                     dbc.NavbarBrand("NLP Sentiment Analysis of Yelp Reviews"),
                 ],
                 align="center",
@@ -151,6 +157,7 @@ balanced_values = balanced_pie_df['value']
 # Card 1
 card = dbc.Card(
     [
+        # Machine learning image
         dbc.CardImg(src="/static/images/ml.jpeg", top=True),
         dbc.CardBody(
             [
@@ -198,15 +205,6 @@ card_two = dbc.Card(
             [
                 html.H4("Data Exploration", className="card-title"),
                 html.P("Select a dataset to explore."),
-                # dcc.Dropdown(
-                #     id='dataset_dropdown',
-                #     options=
-                #             [
-                #                 {'label': 'Unbalanced Dataset', 'value': 0},
-                #                 {'label': 'Balanced Dataset', 'value': 1},
-                #             ],
-                #     label= 'Select a dataset',
-                # ),
                 dbc.DropdownMenu(
                     id="dataset-dropdown-menu",
                     label="Select a dataset",
@@ -266,10 +264,20 @@ body = html.Div(
                         dbc.CardBody(
                             [
                         
-                                dbc.Row([
-                                    dbc.Col(html.Div(card)),
-                                    dbc.Col(html.Div(card_two))
-                                    ]
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                            html.Div(card)
+                                            ],
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                html.Div(card_two)
+                                            ], width=7,
+                                        ), 
+                                    ], 
+                                    
                                 )
                             ]
                         )
@@ -420,7 +428,7 @@ def update_dataset_dropdown(n1, n2):
     elif n2 and not n1:
             label = 'Balanced Dataset'
     else:
-        label = 'Select a model'
+        label = 'Select a dataset'
     return label
 
 # Dataset Dropdown
