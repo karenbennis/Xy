@@ -6,6 +6,7 @@ from dash.dependencies import Input, Output, State
 import requests, base64
 from io import BytesIO
 import plotly.graph_objs as go
+from plotly.subplots import make_subplots
 from collections import Counter
 import plotly.express as px
 import pandas as pd
@@ -19,7 +20,12 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-# Read in ml model
+#### Get Data and  ML Models ####
+
+### ML models ###
+
+## Naive Bayes ##
+
 # Import data for ml model
 ml_file_path = 'static/Resources/ml_app_df.csv'
 ml_input_df = pd.read_csv(ml_file_path)
@@ -63,18 +69,19 @@ pred = mnb.predict(X_test)
 # Initialize y_test object for testing model accuracy
 actual = np.array(y_test)
 
-### For logistic regression
+# For displaying full dataset prediction if we decide to add it at a later date
+count=0
+for i in range(len(pred)):
+    if pred[i] == actual[i]:
+        count+=1
+
+## Logistic Regression ##
 
 # Initialize logistic regression object
 logr = LogisticRegression()
 
 # Fit logistic regression model
 logr.fit(X,y_train)
-
-count=0
-for i in range(len(pred)):
-    if pred[i] == actual[i]:
-        count+=1
 
 """Navbar"""
 
@@ -84,38 +91,38 @@ nav_item = dbc.NavItem(dbc.NavLink('GitHub', href='https://github.com/karenbenni
 
 # Dropdown menu with links to our portfolios
 dropdown = dbc.DropdownMenu(children=[
-    dbc.DropdownMenuItem("Blake's Portfolio"),
-    dbc.DropdownMenuItem("Helen's Portfolio"),
-    dbc.DropdownMenuItem("Jasmeer's Portfolio"),
-    dbc.DropdownMenuItem("Karen's Portfolio"),
+    dbc.DropdownMenuItem("Blake's GitHub", href='https://github.com/blocrunx'),
+    dbc.DropdownMenuItem("Helen's GitHub", href='https://github.com/Helen-Ly'),
+    dbc.DropdownMenuItem("Jasmeer's GitHub", href='https://github.com/JasmeerSangha'),
+    dbc.DropdownMenuItem("Karen's GitHub", href='https://github.com/karenbennis'),
     ],
     nav=True,
     in_navbar=True,
-    label='Team Portfolios'
+    label='Team Repositories'
 )
 
 navbar = dbc.Navbar(
-    dbc.Container(
+    
     [
         html.A(
             # Use row and col to control vertical alignment of logo / brand
             dbc.Row(
                 [
-                    dbc.Col(html.Img(src=yelp_logo, height="70px")),
-                    dbc.Col(dbc.NavbarBrand("NLP Sentiment Analysis of Yelp Reviews", className="ml-2")),
+                    html.Img(src=yelp_logo, height="70px"),
+                    dbc.NavbarBrand("NLP Sentiment Analysis of Yelp Reviews"),
                 ],
                 align="center",
                 no_gutters=True,
+                className='ml-auto'
             ),
             #href="https://plot.ly",
         ),
         dbc.NavbarToggler(id="navbar-toggler"),
         dbc.Collapse(dbc.Nav([nav_item, dropdown], className='ml-auto', navbar=True), id="navbar-collapse", navbar=True),
     ],
-    ),
     color="dark",
     dark=True,
-    className='mb-3'
+    className="ml-auto flex-nowrap mt-3 mt-md-0",
 )
 
 """Navbar End"""
@@ -249,6 +256,27 @@ navbar = dbc.Navbar(
 # )
 
 
+## pie chart
+
+# Read in pie chat data
+unbalanced_pie = pd.read_csv('static/Resources/unbalanced_pie.csv')
+balanced_pie_df = pd.read_csv('static/Resources/balanced_pie.csv')
+
+# Set labels for pie charts
+ub_labels = unbalanced_pie['type']
+ub_values = unbalanced_pie['value']
+# balanced_labels = balanced_pie_df['type']
+balanced_labels = ['Positive words', 'Negative words', 'Neutral words']
+balanced_values = balanced_pie_df['value']
+
+# Create pie charts
+
+# fig3 = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
+# fig3.add_trace(go.Pie(labels=ub_labels, values=ub_values, hole=0.3, pull= [0.2, 0.2, 0], name="Unbalanced Singular Word Sentiment"),
+#             1, 1)
+# fig3.add_trace(go.Pie(labels=balanced_labels, values=balanced_values, hole=0.3, pull= [0.2, 0.2, 0], name="Balanced Singular Word Sentiment"),
+#             1, 2)
+
 """Cards"""
 
 # Card 1
@@ -257,14 +285,17 @@ card = dbc.Card(
         dbc.CardImg(src="/static/images/ml.jpeg", top=True),
         dbc.CardBody(
             [
+                html.P("We applied natural language processing (NLP) and machine learning techniques to identify sentiment to "
+                "classify Yelp reviews for our project."),
                 html.H4("Try it yourself!", className="card-title"),
                 html.P(
-                    "Type a review, then select a model, and see how it predicts your sentiment.",
+                    "Type a review, then select a machine learning model, and see how it predicts your sentiment.",
                     className="card-text",
                 ),
                 html.Div(
                     [
                         dbc.DropdownMenu(
+                            id= "model-dropdown",
                             label="Select a model",
                             children=
                                     [
@@ -274,13 +305,12 @@ card = dbc.Card(
                         ),
                         html.Br(),
                         dbc.Textarea(id="input_area", placeholder="Write a review...",),
-                        dbc.Row(
-                            [
-                                dbc.Button("Predict rating", color="primary", id="predict-button", style={'margin':'auto','width':'50%','padding-left':'10px'}),
-                                dbc.Button("Clear prediction to try again", color="primary", id="clear-button", style={'margin':'auto','width':'50%',
-                                    'padding-right':'10px'} )
-                            ]
-                        ),
+                        html.Br(),
+                        
+                        dbc.Button("Predict sentiment", color="secondary", id="predict-button", ),
+                                # dbc.Button("Clear prediction to try again", color="secondary", id="clear-button", style={'margin':'auto','width':'50%',
+                                #     'padding-right':'10px'} )
+                            
                     ],
                 ),
                 html.Br(),
@@ -298,14 +328,22 @@ card_two = dbc.Card(
             
             [
                 html.H4("Data Exploration", className="card-title"),
-                dcc.Dropdown(
-                    id='dataset_dropdown',
-                    options=
-                            [
-                                {'label': 'Unbalanced Dataset', 'value': 0},
-                                {'label': 'Balanced Dataset', 'value': 1},
-                            ],
-                    value='0'
+                html.P("Select a dataset to explore."),
+                # dcc.Dropdown(
+                #     id='dataset_dropdown',
+                #     options=
+                #             [
+                #                 {'label': 'Unbalanced Dataset', 'value': 0},
+                #                 {'label': 'Balanced Dataset', 'value': 1},
+                #             ],
+                #     label= 'Select a dataset',
+                # ),
+                dbc.DropdownMenu(
+                    label="Select a dataset",
+                    children=[
+                        dbc.DropdownMenuItem("Unbalanced Dataset", id ="ub_dropdown"),
+                        dbc.DropdownMenuItem("Balanced Dataset", id ="b_dropdown"),
+                    ],
                 ),
                 ## Parent tabs app ##
                 html.Br(),
@@ -329,25 +367,50 @@ card_two = dbc.Card(
                                         )
                                     ]
                         ),
+                        dbc.Tab(label="Word Sentiment",
+                            id='tab_three',
+                            children=
+                                    [
+                                        html.Div(
+                                        dcc.Graph(id='tab_three_graph')
+                                        )
+                                    ]
+                        ),
+
                     ]
-                )                               
+                ),
+                html.Br(), 
+                #html.Br(),                            
             ]
         ),
+        # dbc.Button("Show graphs side by side", color="secondary", id="show-both", style={'margin':'left','width':'auto','padding-left':'10px'}),
+        # dbc.Modal(
+        #     [
+        #         dbc.ModalHeader("Header"),
+        #         dbc.ModalBody(id='mod-bod'),
+        #         dbc.ModalFooter(
+        #         dbc.Button("Close", id="close", className="ml-auto")
+        #         ),
+        #     ],
+        #     id="modal",
+        # ),
+        #html.Br(),
     ],
     #style={"width": "40rem"},
 )
 
-card_three = dbc.Card(
-    [
-        dbc.CardBody(
-            [
-                html.P("We applied natural language processing (NLP) and machine learning techniques to identify sentiment to "
-                "classify Yelp reviews into binary categories ('positive review' / 'negative review') and multiclass categories " 
-                "(positive / neutral / negative) and (1 star / 2 star / 3 star / 4 star / 5 star) based on text content in the reviews.")
-            ]
-        ),
-    ], style={"width": "40rem"},
-)
+# card_three = dbc.Card(
+#     [
+#         dbc.CardBody(
+#             [
+#                 html.Link(href="href='https://fonts.googleapis.com/css?family=Caudex", rel="stylesheet"),
+#                 html.H3("Summary"),
+#                 html.P("We applied natural language processing (NLP) and machine learning techniques to identify sentiment to "
+#                 "classify Yelp reviews for our project.")
+#             ], style={"font-family":"Caudex","font-size": "18px"}
+#         ),
+#     ], style={"width": "40rem"},
+# )
 
 """Body"""
 body = html.Div(
@@ -358,7 +421,7 @@ body = html.Div(
                             [
                         
                                 dbc.Row([
-                                    dbc.Col(html.Div([card_three, card])),
+                                    dbc.Col(html.Div(card)),
                                     dbc.Col(html.Div(card_two))
                                     ]
                                 )
@@ -391,52 +454,110 @@ def toggle_navbar_collapse(n, is_open):
 # Text Input App
 @app.callback(
             Output("output", "children"), 
-            
             [Input("input_area", "value"),
-            Input("naive-button", "n_clicks"),
-            Input("logistic-button", "n_clicks"),
-            Input("predict-button", "n_clicks")],
+            Input("naive-button", "n_clicks_timestamp"),
+            Input("logistic-button", "n_clicks_timestamp"),
+            Input("predict-button", "n_clicks_timestamp"),
+            Input("input_area", "n_clicks_timestamp")],
             
             )
 
-def output_text(value, n1, n2, n3):
+def output_text(value, n1, n2, n3, n4):
+
+    if n3 and n1 and not n2:
+        if n3 > n1 and n3 > n4:
+                 
+            # Assign text area input to a variable
+            dash_input = [value]
+
+            # Transform input
+            dash_input = tfidf.transform(dash_input)
+            
+            # User sentiment prediction for naive bayes
+            user_prediction = mnb.predict(dash_input)
+            if user_prediction == 1:
+                user_prediction = 'The Naive Bayes model predicted your review was positive.'
+            else:
+                user_prediction = "The Naive Bayes model predicted your review was negative."
+            #print(user_prediction)
+            
+            return user_prediction
     
+    elif n3 and n2 and not n1:
+        if n3 > n2 and n3 > n4:
 
-    # print(count / len(pred))
-    
-    if n3 and n1:
-        # Assign text area input to a variable
-        dash_input = [value]
+            # Assign text area input to a variable
+            dash_input = [value]
 
-        # Transform input
-        dash_input = tfidf.transform(dash_input)
+            # Transform input
+            dash_input = tfidf.transform(dash_input)
 
-        # User sentiment prediction for naive bayes
-        user_prediction = mnb.predict(dash_input)
+            # User sentiment prediction for logistic regression
+            user_prediction = logr.predict(dash_input)
+            if user_prediction == 1:
+                user_prediction = 'The Logistic Regression model predicted your review was positive.'
+            else:
+                user_prediction = "The Logistic Regression model predicted your review was negative."
+            
+            return user_prediction
+    elif n3 and n2 and n1:
+        if n3 > n2 and n3 > n1 and n3 > n4:
+            if n2 > n1:
+                # Assign text area input to a variable
+                dash_input = [value]
 
-        print(user_prediction)
-        print(value)
-        
-        return user_prediction
-    
-    elif n3 and n2:
-        
+                # Transform input
+                dash_input = tfidf.transform(dash_input)
 
-        # Assign text area input to a variable
-        dash_input = [value]
+                # User sentiment prediction for logistic regression
+                user_prediction = logr.predict(dash_input)
+                if user_prediction == 1:
+                    user_prediction = 'The Logistic Regression model predicted your review was positive.'
+                else:
+                    user_prediction = "The Logistic Regression model predicted your review was negative."
+                
+                return user_prediction
+            
+            if n1 > n2 : 
+                # Assign text area input to a variable
+                dash_input = [value]
 
-        # Transform input
-        dash_input = tfidf.transform(dash_input)
-
-        # User sentiment prediction for logistic regression
-        user_prediction = logr.predict(dash_input)
-
-        return user_prediction
-
+                # Transform input
+                dash_input = tfidf.transform(dash_input)
+                
+                # User sentiment prediction for naive bayes
+                user_prediction = mnb.predict(dash_input)
+                if user_prediction == 1:
+                    user_prediction = 'The Naive Bayes model predicted your review was positive.'
+                else:
+                    user_prediction = "The Naive Bayes model predicted your review was negative."
+                #print(user_prediction)
+            
+                return user_prediction
     else:
         return " "
 
-    # naive_true = False
+@app.callback(
+    Output("model-dropdown", "label"),
+    [Input("naive-button", "n_clicks_timestamp"),
+    Input("logistic-button", "n_clicks_timestamp"),],
+)
+
+def update_dropdown_logistic_label(n1, n2):
+    if n2 and n1:
+        if n1 < n2:
+            label = 'Logistic'
+        elif n2 < n1:
+            label = 'Naive Bayes'
+    elif n1 and not n2:
+        label = 'Naive Bayes'
+    elif n2 and not n1:
+            label = 'Logistic'
+    else:
+        label = 'Select a model'
+    return label
+
+        # naive_true = False
     # logistic_true = False
     # ctx = dash.callback_context
     # if not ctx.triggered:
@@ -454,24 +575,38 @@ def output_text(value, n1, n2, n3):
 
     #     return value
 
-@app.callback(
+# @app.callback(
     
-    [Output("predict-button", "n_clicks"),
-    Output("naive-button", "n_clicks"),],
-    [Input("clear-button", "n_clicks"),]
+#     [Output("predict-button", "n_clicks"),
+#     Output("naive-button", "n_clicks"),],
+#     [Input("clear-button", "n_clicks"),]
     
-)   
+# )   
 
-def clear_clicks(n1):
-    return [0,0]
+# def clear_clicks(n1):
+#     return [0,0]
 
 # Dataset Dropdown
 @app.callback(
     [Output("tab_one_graph", "figure"),
     Output("tab_two_graph", "figure")],
-    [Input("dataset_dropdown", "value")],
+    [Input("ub_dropdown", "n_clicks_timestamp"),
+    Input("b_dropdown", "n_clicks_timestamp")],
 )
-def update_fig(dataset):
+def update_fig(n1, n2):
+    if not n1 and not n2:
+        dataset = 0
+    if n1 and not n2:
+        dataset = 0
+    if n2 and not n1:
+        dataset = 1
+    if n1 and n2:
+        if n1 > n2:
+            dataset = 0
+        else:
+            dataset = 1
+
+
     int_dataset = int(dataset)
     dfs = []
     file_path1 = 'yelp.csv'
@@ -513,25 +648,77 @@ def update_fig(dataset):
     five_star_df = df.loc[df['stars'] == 5]
 
     # Create trace object for each star rating 
-    trace_1 = go.Box(x=one_star_df['stars'], y=one_star_df['length'], marker_color='royalblue', boxmean='sd')
-    trace_2 = go.Box(x=two_star_df['stars'], y=two_star_df['length'], marker_color='royalblue', boxmean='sd')
-    trace_3 = go.Box(x=three_star_df['stars'], y=three_star_df['length'], marker_color='royalblue', boxmean='sd')
-    trace_4 = go.Box(x=four_star_df['stars'], y=four_star_df['length'], marker_color='royalblue', boxmean='sd')
-    trace_5 = go.Box(x=five_star_df['stars'], y=five_star_df['length'], marker_color='royalblue', boxmean='sd')
+    trace_1 = go.Box(x=one_star_df['stars'], y=one_star_df['length'], marker_color='#54478c', boxmean='sd', name='1 star')
+    trace_2 = go.Box(x=two_star_df['stars'], y=two_star_df['length'], marker_color='#048ba8', boxmean='sd', name='2 star')
+    trace_3 = go.Box(x=three_star_df['stars'], y=three_star_df['length'], marker_color='#16db93', boxmean='sd', name='3 star')
+    trace_4 = go.Box(x=four_star_df['stars'], y=four_star_df['length'], marker_color='#f29e4c', boxmean='sd', name='4 star')
+    trace_5 = go.Box(x=five_star_df['stars'], y=five_star_df['length'], marker_color='#efea5a', boxmean='sd', name='5 star')
     
     # Assign trace objects to list 
     data = [trace_1, trace_2, trace_3, trace_4, trace_5]
 
     # Create box plot layout object
     box_layout = go.Layout(
-    title = "Length of Review per Star Rating"
+    title = "Length of Review per Star Rating",
+    xaxis_title="Star Rating",
+    yaxis_title="Length of Review"
     )
     fig_data=[]
-    fig = px.bar(dfs[int_dataset], y=["stars"], barmode="group")
+    ds = dfs[int_dataset]
+    ds['x'] = ds.index
+    fig = px.bar(ds, x='x', y="stars", barmode="group", labels={"x":"Star Rating", "stars":"Number of Reviews"}, color="x")
     fig2 = go.Figure(data=data, layout=box_layout)
     fig_data.append(fig2)
-
+    #print(ds)
     return [fig, fig2]
+
+# # Modal
+# @app.callback(
+#     Output("modal", "is_open"),
+#     [Input("show-both", "n_clicks"),
+#     Input("close", "n_clicks"),
+#     Input("dataset_dropdown", "value")],
+#     [State("modal", "is_open")],
+# )
+# def toggle_modal(n1, n2, value, is_open):
+#     if n2 1:
+#         return not is_open
+#     elif: n2 and value
+#     else:
+
+#     return is_open
+
+# Dataset Dropdown
+@app.callback(
+    Output("tab_three_graph", "figure"),
+        [Input("ub_dropdown", "n_clicks_timestamp"),
+        Input("b_dropdown", "n_clicks_timestamp")],
+)
+def show_pies(n1, n2):
+    #fig3 = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
+    if not n1 and not n2:
+        fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
+        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+    
+    if n1 and not n2:
+        fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
+        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+    
+    if n1 and n2:
+        if n1 > n2:
+            fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
+            fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+
+        if n2 > n1:
+            fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=balanced_values, pull= [0.2, 0.2, 0], name="Balanced")])
+            fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+    
+    else:
+        fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=balanced_values, pull= [0.2, 0.2, 0], name="Balanced")])
+        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+    print(n1)
+    return fig3
+
 
 # """End App Callback"""
 
