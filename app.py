@@ -85,19 +85,16 @@ logr.fit(X,y_train)
 
 """Navbar"""
 
-# Navbar image
 yelp_logo = "static/images/yelp_logo.png"
 
-# Link to projects master GitHub repo
 nav_item = dbc.NavItem(dbc.NavLink('GitHub', href='https://github.com/karenbennis/Xy'))
 
 # Dropdown menu with links to our portfolios
-dropdown = dbc.DropdownMenu(children=
-    [
-        dbc.DropdownMenuItem("Blake's GitHub", href='https://github.com/blocrunx'),
-        dbc.DropdownMenuItem("Helen's GitHub", href='https://github.com/Helen-Ly'),
-        dbc.DropdownMenuItem("Jasmeer's GitHub", href='https://github.com/JasmeerSangha'),
-        dbc.DropdownMenuItem("Karen's GitHub", href='https://github.com/karenbennis'),
+dropdown = dbc.DropdownMenu(children=[
+    dbc.DropdownMenuItem("Blake's GitHub", href='https://github.com/blocrunx'),
+    dbc.DropdownMenuItem("Helen's GitHub", href='https://github.com/Helen-Ly'),
+    dbc.DropdownMenuItem("Jasmeer's GitHub", href='https://github.com/JasmeerSangha'),
+    dbc.DropdownMenuItem("Karen's GitHub", href='https://github.com/karenbennis'),
     ],
     nav=True,
     in_navbar=True,
@@ -111,15 +108,14 @@ navbar = dbc.Navbar(
             # Use row and col to control vertical alignment of logo / brand
             dbc.Row(
                 [
-                    # Tag to display navbar logo
                     html.Img(src=yelp_logo, height="70px"),
-                    # Navbar header with project name
                     dbc.NavbarBrand("NLP Sentiment Analysis of Yelp Reviews"),
                 ],
                 align="center",
                 no_gutters=True,
                 className='ml-auto'
             ),
+            #href="https://plot.ly",
         ),
         dbc.NavbarToggler(id="navbar-toggler"),
         dbc.Collapse(dbc.Nav([nav_item, dropdown], className='ml-auto', navbar=True), id="navbar-collapse", navbar=True),
@@ -155,40 +151,35 @@ balanced_values = balanced_pie_df['value']
 # Card 1
 card = dbc.Card(
     [
-        # Add machine learning image
         dbc.CardImg(src="/static/images/ml.jpeg", top=True),
-        
-        # Body of card
         dbc.CardBody(
             [
-                # Paragraph
                 html.P("We applied natural language processing (NLP) and machine learning techniques to identify sentiment to "
                 "classify Yelp reviews for our project."),
-                # Header
                 html.H4("Try it yourself!", className="card-title"),
-                # Paragraph
                 html.P(
-                    "Select a machine learning model, type a review, and click 'predict sentiment' to see the model classifies your review."
-                    " Get Creative!",
+                    "Type a review, then select a machine learning model, and see how it predicts your sentiment.",
                     className="card-text",
                 ),
-                # div containing drop down menu and menu items
                 html.Div(
                     [
                         dbc.DropdownMenu(
                             id= "model-dropdown",
                             label="Select a model",
                             children=
-                                [
-                                    dbc.DropdownMenuItem("Naive Bayes", id="naive-button"),
-                                    dbc.DropdownMenuItem("Logistic Regression", id="logistic-button")
-                                ],
+                                    [
+                                        dbc.DropdownMenuItem("Naive Bayes", id="naive-button"),
+                                        dbc.DropdownMenuItem("Logistic Regression", id="logistic-button")
+                                    ],
                         ),
                         html.Br(),
                         dbc.Textarea(id="input_area", placeholder="Write a review...",),
                         html.Br(),
                         
-                        dbc.Button("Predict sentiment", color="secondary", id="predict-button", ),                                                        
+                        dbc.Button("Predict sentiment", color="secondary", id="predict-button", ),
+                                # dbc.Button("Clear prediction to try again", color="secondary", id="clear-button", style={'margin':'auto','width':'50%',
+                                #     'padding-right':'10px'} )
+                            
                     ],
                 ),
                 html.Br(),
@@ -199,16 +190,23 @@ card = dbc.Card(
     style={"width": "40rem"},
 )
 
-# Card 2 - to be used on right side of screen(Data Exploration)
+# Card 2
 card_two = dbc.Card(
     [
         dbc.CardBody(
             
             [
                 html.H4("Data Exploration", className="card-title"),
-                html.P("From the dropdown menu, select a dataset to explore. Each tab will update dynamically and"
-                    " display insights gleaned from the data exploratoin process."),                
-                # Dropdown component for dataset selection options
+                html.P("Select a dataset to explore."),
+                # dcc.Dropdown(
+                #     id='dataset_dropdown',
+                #     options=
+                #             [
+                #                 {'label': 'Unbalanced Dataset', 'value': 0},
+                #                 {'label': 'Balanced Dataset', 'value': 1},
+                #             ],
+                #     label= 'Select a dataset',
+                # ),
                 dbc.DropdownMenu(
                     id="dataset-dropdown-menu",
                     label="Select a dataset",
@@ -217,40 +215,34 @@ card_two = dbc.Card(
                         dbc.DropdownMenuItem("Balanced Dataset", id ="b_dropdown"),
                     ],
                 ),
-                ## Parent tabs component ##
+                ## Parent tabs app ##
                 html.Br(),
                 dbc.Tabs(
                     [
-                        # Tab component to display bar graph
                         dbc.Tab(label="Star Distribution",
                             id='tab_one',
                             children= 
                                     [
                                         html.Div(
-                                            # Bar Graph, returned by callback
-                                            dcc.Graph(id='tab_one_graph'),
+                                        dcc.Graph(id='tab_one_graph'),
                                         )
                                     ],  
-                        ), 
-                        # Tab component to display boxplot           
+                        ),             
                         dbc.Tab(label="Length vs Rating",
                             id='tab_two',
                             children=
                                     [
                                         html.Div(
-                                        # Box plot, returned by callback
                                         dcc.Graph(id='tab_two_graph')
                                         )
                                     ]
                         ),
-                        # Tab component to display pie charts
                         dbc.Tab(label="Word Sentiment",
                             id='tab_three',
                             children=
                                     [
                                         html.Div(
-                                            # Pie chart, returned by callback
-                                            dcc.Graph(id='tab_three_graph')
+                                        dcc.Graph(id='tab_three_graph')
                                         )
                                     ]
                         ),
@@ -261,15 +253,12 @@ card_two = dbc.Card(
                 #html.Br(),                            
             ]
         ),
+        
     ],
     #style={"width": "40rem"},
 )
 
 """Body"""
-
-# This is where page components are combined and added to a body object to pass to the app layout 
-# function along with with the navbar
-# navbar
 body = html.Div(
     [
         dbc.Card(
@@ -388,13 +377,12 @@ def output_text(value, n1, n2, n3, n4):
                     user_prediction = 'The Naive Bayes model predicted your review was positive.'
                 else:
                     user_prediction = "The Naive Bayes model predicted your review was negative."
-                
+                #print(user_prediction)
             
                 return user_prediction
     else:
         return " "
 
-# Callback to update model selection dropdown label
 @app.callback(
     Output("model-dropdown", "label"),
     [Input("naive-button", "n_clicks_timestamp"),
@@ -404,25 +392,24 @@ def output_text(value, n1, n2, n3, n4):
 def update_dropdown_logistic_label(n1, n2):
     if n2 and n1:
         if n1 < n2:
-            label = 'Logistic Regression'
+            label = 'Logistic'
         elif n2 < n1:
             label = 'Naive Bayes'
     elif n1 and not n2:
         label = 'Naive Bayes'
     elif n2 and not n1:
-            label = 'Logistic Regression'
+            label = 'Logistic'
     else:
         label = 'Select a model'
     return label
 
-# Callback to update dataset dropdown label
 @app.callback(
     Output("dataset-dropdown-menu", "label"),
     [Input("ub_dropdown", "n_clicks_timestamp"),
-    Input("b_dropdown", "n_clicks_timestamp")],
+    Input("b_dropdown", "n_clicks_timestamp"),],
 )
 
-def update_dataset_dropdown_label(n1, n2):
+def update_dataset_dropdown(n1, n2):
     if n2 and n1:
         if n1 < n2:
             label = 'Balanced Dataset'
@@ -436,14 +423,13 @@ def update_dataset_dropdown_label(n1, n2):
         label = 'Select a model'
     return label
 
-# Callback to dynamically update bar chart and boxplot in card 2
+# Dataset Dropdown
 @app.callback(
     [Output("tab_one_graph", "figure"),
     Output("tab_two_graph", "figure")],
     [Input("ub_dropdown", "n_clicks_timestamp"),
     Input("b_dropdown", "n_clicks_timestamp")],
 )
-
 def update_fig(n1, n2):
     if not n1 and not n2:
         dataset = 0
@@ -456,6 +442,7 @@ def update_fig(n1, n2):
             dataset = 0
         else:
             dataset = 1
+
 
     int_dataset = int(dataset)
     dfs = []
@@ -532,25 +519,25 @@ def show_pies(n1, n2):
     #fig3 = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
     if not n1 and not n2:
         fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
-        fig3.update_layout(margin=dict(t=1, b=0, l=0, r=0))
+        #fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0))
     
     if n1 and not n2:
         fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
-        fig3.update_layout(margin=dict(t=1, b=0, l=0, r=0))
+        #fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0))
     
     if n1 and n2:
         if n1 > n2:
             fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
-            fig3.update_layout(margin=dict(t=1, b=0, l=0, r=0))
+            #fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0))
 
         if n2 > n1:
             fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=balanced_values, pull= [0.2, 0.2, 0], name="Balanced")])
-            fig3.update_layout(margin=dict(t=1, b=0, l=0, r=0))
+            #fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0))
     
     else:
         fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=balanced_values, pull= [0.2, 0.2, 0], name="Balanced")])
-        fig3.update_layout(margin=dict(t=1, b=0, l=0, r=0))
-    print(n1)
+        #fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+    #print(n1)
     return fig3
 
 
