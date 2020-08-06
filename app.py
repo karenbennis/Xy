@@ -471,8 +471,8 @@ def update_fig(n1, n2):
 
     int_dataset = int(dataset)
     dfs = []
-    file_path1 = 'yelp.csv'
-    file_path2 = 'uniform_yelp.csv'
+    file_path1 = 'Resources/yelp.csv'
+    file_path2 = 'Resources/uniform_yelp.csv'
     df1 = pd.read_csv(file_path1)
      # Create length column containing length of reviews
     df1['length'] = df1['text'].apply(len)
