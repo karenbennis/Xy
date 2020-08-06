@@ -30,12 +30,8 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 ml_file_path = 'static/Resources/ml_app_df.csv'
 ml_input_df = pd.read_csv(ml_file_path)
 
-# print(ml_input_df)
-
 # Create object with review data
 df_x = ml_input_df['cleaned']
-
-# print(df_x)
 
 # Create object with class(star) data
 df_y = ml_input_df['class']
@@ -192,10 +188,7 @@ card = dbc.Card(
                         dbc.Textarea(id="input_area", placeholder="Write a review...",),
                         html.Br(),
                         
-                        dbc.Button("Predict sentiment", color="secondary", id="predict-button", ),
-                                # dbc.Button("Clear prediction to try again", color="secondary", id="clear-button", style={'margin':'auto','width':'50%',
-                                #     'padding-right':'10px'} )
-                            
+                        dbc.Button("Predict sentiment", color="secondary", id="predict-button", ),                                                           
                     ],
                 ),
                 html.Br(),
@@ -206,7 +199,6 @@ card = dbc.Card(
             ]
         ),
     ],
-    #style={"width": "40rem"},
 )
 
 # Card 2
@@ -234,16 +226,11 @@ card_two = dbc.Card(
                     [
                         dbc.Col(
                             dbc.Card(
-                                dbc.CardBody(#id='tab_one',
+                                dbc.CardBody(
                                     [
                                         html.Div(
                                         dcc.Graph(id='tab_two_graph'),
                                         ),
-                                        
-                                        # html.Div(
-                                        # dcc.Graph(id='tab_one_graph'),
-                                        # ),
-                                        
                                     ],
                                 ),
                             ),
@@ -251,16 +238,10 @@ card_two = dbc.Card(
                         dbc.Col(
                             dbc.Card(
                                 dbc.CardBody(
-                                    #label="Length vs Rating",
-                                    #id='tab_two',
-                                    #children= 
                                     [
                                         html.Div(
                                         dcc.Graph(id='tab_three_graph')
-                                        ),
-                                        # html.Div(
-                                        # dcc.Graph(id='tab_two_graph'),
-                                        # ),
+                                        ),                                       
                                     ],  
                                 ),
                             ),
@@ -272,18 +253,12 @@ card_two = dbc.Card(
                         dbc.Col(
                             dbc.Card(
                                 dbc.CardBody(
-                                    #label="Word Sentiment",
-                                    #id='tab_three',
-                                    #children=
-                                        [
-                                            
-                                            html.Div(
-                                            dcc.Graph(id='tab_one_graph'),
-                                            ),
-                                            # html.Div(
-                                            # dcc.Graph(id='tab_three_graph')
-                                            # ),
-                                        ],
+                                    [
+                                        
+                                        html.Div(
+                                        dcc.Graph(id='tab_one_graph'),
+                                        ),                                            
+                                    ],
                                 ),
                             ),
                         ),                        
@@ -299,28 +274,28 @@ card_two = dbc.Card(
 body = html.Div(
     [
         dbc.Card(
+            [
+                dbc.CardBody(
                     [
-                        dbc.CardBody(
+                
+                        dbc.Row(
                             [
-                        
-                                dbc.Row(
+                                dbc.Col(
                                     [
-                                        dbc.Col(
-                                            [
-                                            html.Div(card)
-                                            ], width=4,
-                                        ),
-                                        dbc.Col(
-                                            [
-                                                html.Div(card_two)
-                                            ], width=8,
-                                        ), 
-                                    ], 
-                                    
-                                )
-                            ]
+                                        html.Div(card)
+                                    ], width=4,
+                                ),
+                                dbc.Col(
+                                    [
+                                        html.Div(card_two)
+                                    ], width=8,
+                                ), 
+                            ], 
+                            
                         )
-                    ], style = {"padding-left":"10px", "padding-right":"10px"},
+                    ]
+                )
+            ], style = {"padding-left":"10px", "padding-right":"10px"},
         ),
     ],style = {"padding-left":"10px", "padding-right":"10px"},
 )
@@ -344,7 +319,7 @@ def toggle_navbar_collapse(n, is_open):
         return not is_open
     return is_open
 
-# Text Input App
+# Sentiment prediction callback
 @app.callback(
             Output("output", "children"), 
             [Input("input_area", "value"),
@@ -354,7 +329,7 @@ def toggle_navbar_collapse(n, is_open):
             Input("input_area", "n_clicks_timestamp")],
             
             )
-
+# Function for sentiment prediction
 def output_text(value, n1, n2, n3, n4):
 
     if n3 and n1 and not n2:
@@ -430,6 +405,7 @@ def output_text(value, n1, n2, n3, n4):
     else:
         return " "
 
+# Updates model dropdown label
 @app.callback(
     Output("model-dropdown", "label"),
     [Input("naive-button", "n_clicks_timestamp"),
@@ -450,6 +426,7 @@ def update_dropdown_logistic_label(n1, n2):
         label = 'Select a model'
     return label
 
+# Updates dataset dropdown label
 @app.callback(
     Output("dataset-dropdown-menu", "label"),
     [Input("ub_dropdown", "n_clicks_timestamp"),
@@ -470,7 +447,7 @@ def update_dataset_dropdown(n1, n2):
         label = 'Select a dataset to explore'
     return label
 
-# Dataset Dropdown
+# Returns bar and box figures based on user input
 @app.callback(
     [Output("tab_one_graph", "figure"),
     Output("tab_two_graph", "figure")],
@@ -563,7 +540,7 @@ def update_fig(n1, n2):
     #print(ds)
     return [fig, fig2]
 
-# Dataset Dropdown
+# Updates pie chart
 @app.callback(
     Output("tab_three_graph", "figure"),
         [Input("ub_dropdown", "n_clicks_timestamp"),
