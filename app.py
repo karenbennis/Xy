@@ -103,6 +103,15 @@ dropdown = dbc.DropdownMenu(children=[
     label='Team Repositories'
 )
 
+# Dropdown menu with links to our portfolios
+dropdown_kaggle = dbc.DropdownMenu(children=[
+    dbc.DropdownMenuItem("Small Dataset", href='https://www.kaggle.com/omkarsabnis/yelp-reviews-dataset'),
+    dbc.DropdownMenuItem("Large Dataset", href='https://www.kaggle.com/shikhar42/yelps-dataset?select=yelp_review.csv'),
+    ],
+    nav=True,
+    in_navbar=True,
+    label='Kaggle Datasets'
+)
 # Navabar Componten
 navbar = dbc.Navbar(
     
@@ -121,10 +130,10 @@ navbar = dbc.Navbar(
                 no_gutters=True,
                 className='ml-auto'
             ),
-            #href="https://plot.ly",
+            
         ),
         dbc.NavbarToggler(id="navbar-toggler"),
-        dbc.Collapse(dbc.Nav([nav_item, dropdown], className='ml-auto', navbar=True), id="navbar-collapse", navbar=True),
+        dbc.Collapse(dbc.Nav([nav_item, dropdown, dropdown_kaggle], className='ml-auto', navbar=True), id="navbar-collapse", navbar=True),
     ],
     color="dark",
     dark=True,
@@ -161,11 +170,11 @@ card = dbc.Card(
         dbc.CardImg(src="/static/images/ml.jpeg", top=True),
         dbc.CardBody(
             [
-                html.P("We applied natural language processing (NLP) and machine learning techniques to identify sentiment to "
+                html.P("We applied natural language processing (NLP) and supervised machine learning techniques to identify sentiment and "
                 "classify Yelp reviews for our project."),
                 html.H4("Try it yourself!", className="card-title"),
                 html.P(
-                    "Type a review, then select a machine learning model, and see how it predicts your sentiment.",
+                    "Select a machine learning model, type a review, and click 'predict sentiment' to see how the model classifies your review.",                    
                     className="card-text",
                 ),
                 html.Div(
@@ -190,7 +199,10 @@ card = dbc.Card(
                     ],
                 ),
                 html.Br(),
-                html.P(id="output"),        
+                html.P(
+                    id="output",
+                    style={"font-size":"14px"},
+                    ),        
             ]
         ),
     ],
@@ -203,20 +215,21 @@ card_two = dbc.Card(
         dbc.CardBody(
             
             [
-                dbc.Row([html.H4("Select a dataset to explore", className="card-title"),
-                dbc.Col(
-                    dbc.DropdownMenu(
-                        id="dataset-dropdown-menu",
-                        label="Select a dataset",
-                        children=[
-                            dbc.DropdownMenuItem("Unbalanced Dataset", id ="ub_dropdown"),
-                            dbc.DropdownMenuItem("Balanced Dataset", id ="b_dropdown"),
-                        ],
-                    ),
+                dbc.Row(
+                    [
+                    dbc.Col(
+                        dbc.DropdownMenu(
+                            id="dataset-dropdown-menu",
+                            label="Select a dataset",
+                            children=[
+                                dbc.DropdownMenuItem("Unbalanced Dataset", id ="ub_dropdown"),
+                                dbc.DropdownMenuItem("Balanced Dataset", id ="b_dropdown"),
+                            ],
+                        ),
 
+                    ),                
+                    ],
                 ),
-                
-                ]),
                 dbc.Row(
                     [
                         dbc.Col(
@@ -263,6 +276,7 @@ card_two = dbc.Card(
                                     #id='tab_three',
                                     #children=
                                         [
+                                            
                                             html.Div(
                                             dcc.Graph(id='tab_one_graph'),
                                             ),
@@ -270,11 +284,9 @@ card_two = dbc.Card(
                                             # dcc.Graph(id='tab_three_graph')
                                             # ),
                                         ],
-
                                 ),
                             ),
-                        ),
-                        dbc.Col(),
+                        ),                        
                     ],
                 ),
             ],
@@ -282,54 +294,6 @@ card_two = dbc.Card(
     ],
 ),
                     
-
-
-                
-                # html.H4("Data Exploration", className="card-title"),
-                # html.P("Select a dataset to explore."),
-                
-                ## Parent tabs app ##
-                # html.Br(),
-                # dbc.Tabs(
-                #     [
-                #         dbc.Tab(label="Star Distribution",
-                #             id='tab_one',
-                #             children= 
-                #                     [
-                #                         html.Div(
-                #                         dcc.Graph(id='tab_one_graph'),
-                #                         )
-                #                     ],  
-                #         ),             
-                        # dbc.Tab(label="Length vs Rating",
-                        #     id='tab_two',
-                        #     children=
-                        #             [
-                        #                 html.Div(
-                        #                 dcc.Graph(id='tab_two_graph')
-                        #                 )
-                        #             ]
-                        # ),
-#                         dbc.Tab(label="Word Sentiment",
-#                             id='tab_three',
-#                             children=
-#                                     [
-#                                         html.Div(
-#                                         dcc.Graph(id='tab_three_graph')
-#                                         )
-#                                     ]
-#                         ),
-
-#                     ]
-#                 ),
-#                 html.Br(), 
-#                 #html.Br(),                            
-#             ]
-#         ),
-        
-#     ],
-#     #style={"width": "40rem"},
-# )
 
 """Body"""
 body = html.Div(
@@ -475,13 +439,13 @@ def output_text(value, n1, n2, n3, n4):
 def update_dropdown_logistic_label(n1, n2):
     if n2 and n1:
         if n1 < n2:
-            label = 'Logistic'
+            label = 'Logistic Regression'
         elif n2 < n1:
             label = 'Naive Bayes'
     elif n1 and not n2:
         label = 'Naive Bayes'
     elif n2 and not n1:
-            label = 'Logistic'
+            label = 'Logistic Regression'
     else:
         label = 'Select a model'
     return label
@@ -503,7 +467,7 @@ def update_dataset_dropdown(n1, n2):
     elif n2 and not n1:
             label = 'Balanced Dataset'
     else:
-        label = 'Select a dataset'
+        label = 'Select a dataset to explore'
     return label
 
 # Dataset Dropdown
@@ -580,16 +544,20 @@ def update_fig(n1, n2):
     # Create box plot layout object
     box_layout = go.Layout(
     title = "Length of Review per Star Rating",
+    title_x=0.5,
     xaxis_title="Star Rating",
     yaxis_title="Length of Review",
     autosize=False,
-    height=300,
-    width=550
+    height=200,
+    width=400,
+    showlegend=False,
+    margin=dict(t=35, b=0, l=0, r=0),
     )
     fig_data=[]
     ds = dfs[int_dataset]
     ds['x'] = ds.index
-    fig = px.bar(ds, x='x', y="stars", barmode="group", labels={"x":"Star Rating", "stars":"Number of Reviews"}, color="x", height=375, width=500,)
+    fig = px.bar(ds, x='x', y="stars", barmode="group", labels={"x":"Star Rating", "stars":"Number of Reviews"}, color="x", height=300,)
+    fig.update_layout(margin=dict(t=50, b=0, l=0, r=0), title_text="Distribution of Ratings", title_x=0.5)
     fig2 = go.Figure(data=data, layout=box_layout)
     fig_data.append(fig2)
     #print(ds)
@@ -605,24 +573,25 @@ def show_pies(n1, n2):
     #fig3 = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
     if not n1 and not n2:
         fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
-        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=300)
+        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Sum of Positive and Negative Words", title_x=0.5)
     
     if n1 and not n2:
         fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
-        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=300)
+        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Sum of Positive and Negative Words", title_x=0.5)
     
     if n1 and n2:
         if n1 > n2:
             fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
-            fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=300)
+            fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Sum of Positive and Negative Words", title_x=0.5)
 
         if n2 > n1:
             fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=balanced_values, pull= [0.2, 0.2, 0], name="Balanced")])
-            fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=300)
+            fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Sum of Positive and Negative Words", title_x=0.5)
+        
     
     else:
         fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=balanced_values, pull= [0.2, 0.2, 0], name="Balanced")])
-        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=300)
+        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Sum of Positive and Negative Words", title_x=0.5)
     #print(n1)
     return fig3
 
