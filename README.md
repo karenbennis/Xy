@@ -95,7 +95,7 @@ Using the sample dataset, the exploratory analysis and plotting revealed that th
 
 Despite the imbalance, we created various plots that looked at review text length, useful votes, cool votes, and funny votes to see if there were patterns that could be observed on the basis of star rating.
 
-We discovered immediately that there did not appear to be much variation between any star review (1, 2, 3, 4, or 5-stars) across all metrics.
+We discovered immediately that there did not appear to be much variation between any star review (1, 2, 3, 4, or 5-stars) across all metrics as shown in the plots below:
 
 ![](https://github.com/karenbennis/Xy/blob/master/Visuals/Facet.png)
 ![](https://github.com/karenbennis/Xy/blob/master/Visuals/Boxplot.png)
@@ -105,7 +105,7 @@ In hopes of discovering more compelling patterns that might exist, we decided to
 
 ![](https://github.com/karenbennis/Xy/blob/master/Visuals/distribution-balanced.png)
 
-Unfortunately, the resampled data showed similar patterns to those observed in the sample dataset.
+Unfortunately, similar patterns to those observed in the sample dataset were observed in the resampled data, as shown below.
 
 ![](https://github.com/karenbennis/Xy/blob/master/Visuals/Facet-balanced.png)
 ![](https://github.com/karenbennis/Xy/blob/master/Visuals/Boxplot-balanced.png)
