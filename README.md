@@ -89,15 +89,27 @@ The main Colab notebook Project.ipynb interacts with the database in the followi
 
 
 ### Exploratory analysis phase
-Using the sample dataset, the exploratory analysis and plotting revealed that there was an uneven distribution of reviews across the different star ratings, with most of the set being 4 and 5-star reviews.
+Using the sample dataset, the exploratory analysis and plotting revealed that there was an uneven distribution of reviews across the different star ratings, with most of the set being 4 and 5-star reviews, as shown below:
+
+![](https://github.com/karenbennis/Xy/blob/master/Visuals/distribution.png)
 
 Despite the imbalance, we created various plots that looked at review text length, useful votes, cool votes, and funny votes to see if there were patterns that could be observed on the basis of star rating.
 
 We discovered immediately that there did not appear to be much variation between any star review (1, 2, 3, 4, or 5-stars) across all metrics.
 
+![](https://github.com/karenbennis/Xy/blob/master/Visuals/Facet.png)
+![](https://github.com/karenbennis/Xy/blob/master/Visuals/Boxplot.png)
+![](https://github.com/karenbennis/Xy/blob/master/Visuals/Violin.png)
+
 In hopes of discovering more compelling patterns that might exist, we decided to draw from the larger dataset to see if this would make a difference. Based on the technical limitations of Colab, we realised that sampling more than 10 thousand rows would not be possible, so we decided to sample 10 thousand rows, ensuring equal representation from each star rating.
 
+![](https://github.com/karenbennis/Xy/blob/master/Visuals/distribution-balanced.png)
+
 Unfortunately, the resampled data showed similar patterns to those observed in the sample dataset.
+
+![](https://github.com/karenbennis/Xy/blob/master/Visuals/Facet-balanced.png)
+![](https://github.com/karenbennis/Xy/blob/master/Visuals/Boxplot-balanced.png)
+![](https://github.com/karenbennis/Xy/blob/master/Visuals/Violin-balanced.png
 
 We concluded that star rating does not seem to relate to any of the factors considered in such a profound way. At a higher level, this demonstrates the need for NLP analysis to predict sentiment.
 
