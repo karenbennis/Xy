@@ -549,25 +549,25 @@ def update_fig(n1, n2):
 def show_pies(n1, n2):
     #fig3 = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
     if not n1 and not n2:
-        fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
+        fig3 = go.Figure(data=[go.Pie(labels=balanced_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
         fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Sum of Positive and Negative Words", title_x=0.5)
     
     if n1 and not n2:
-        fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
+        fig3 = go.Figure(data=[go.Pie(labels=balanced_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
         fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Sum of Positive and Negative Words", title_x=0.5)
     
     if n1 and n2:
         if n1 > n2:
-            fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
+            fig3 = go.Figure(data=[go.Pie(labels=balanced_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
             fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Sum of Positive and Negative Words", title_x=0.5)
 
         if n2 > n1:
-            fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=balanced_values, pull= [0.2, 0.2, 0], name="Balanced")])
+            fig3 = go.Figure(data=[go.Pie(labels=balanced_labels, values=balanced_values, pull= [0.2, 0.2, 0], name="Balanced")])
             fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Sum of Positive and Negative Words", title_x=0.5)
         
     
     else:
-        fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=balanced_values, pull= [0.2, 0.2, 0], name="Balanced")])
+        fig3 = go.Figure(data=[go.Pie(labels=balanced_labels, values=balanced_values, pull= [0.2, 0.2, 0], name="Balanced")])
         fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Sum of Positive and Negative Words", title_x=0.5)
     #print(n1)
     return fig3
