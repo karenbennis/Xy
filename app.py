@@ -194,7 +194,7 @@ card = dbc.Card(
             ]
         ),
     ],
-    style={"width": "40rem"},
+    #style={"width": "40rem"},
 )
 
 # Card 2
@@ -203,58 +203,133 @@ card_two = dbc.Card(
         dbc.CardBody(
             
             [
-                html.H4("Data Exploration", className="card-title"),
-                html.P("Select a dataset to explore."),
-                dbc.DropdownMenu(
-                    id="dataset-dropdown-menu",
-                    label="Select a dataset",
-                    children=[
-                        dbc.DropdownMenuItem("Unbalanced Dataset", id ="ub_dropdown"),
-                        dbc.DropdownMenuItem("Balanced Dataset", id ="b_dropdown"),
-                    ],
+                dbc.Row([html.H4("Select a dataset to explore", className="card-title"),
+                dbc.Col(
+                    dbc.DropdownMenu(
+                        id="dataset-dropdown-menu",
+                        label="Select a dataset",
+                        children=[
+                            dbc.DropdownMenuItem("Unbalanced Dataset", id ="ub_dropdown"),
+                            dbc.DropdownMenuItem("Balanced Dataset", id ="b_dropdown"),
+                        ],
+                    ),
+
                 ),
-                ## Parent tabs app ##
-                html.Br(),
-                dbc.Tabs(
+                
+                ]),
+                dbc.Row(
                     [
-                        dbc.Tab(label="Star Distribution",
-                            id='tab_one',
-                            children= 
+                        dbc.Col(
+                            dbc.Card(
+                                dbc.CardBody(#id='tab_one',
                                     [
                                         html.Div(
-                                        dcc.Graph(id='tab_one_graph'),
-                                        )
-                                    ],  
-                        ),             
-                        dbc.Tab(label="Length vs Rating",
-                            id='tab_two',
-                            children=
-                                    [
-                                        html.Div(
-                                        dcc.Graph(id='tab_two_graph')
-                                        )
-                                    ]
+                                        dcc.Graph(id='tab_two_graph'),
+                                        ),
+                                        
+                                        # html.Div(
+                                        # dcc.Graph(id='tab_one_graph'),
+                                        # ),
+                                        
+                                    ],
+                                ),
+                            ),
                         ),
-                        dbc.Tab(label="Word Sentiment",
-                            id='tab_three',
-                            children=
+                        dbc.Col(
+                            dbc.Card(
+                                dbc.CardBody(
+                                    #label="Length vs Rating",
+                                    #id='tab_two',
+                                    #children= 
                                     [
                                         html.Div(
                                         dcc.Graph(id='tab_three_graph')
-                                        )
-                                    ]
+                                        ),
+                                        # html.Div(
+                                        # dcc.Graph(id='tab_two_graph'),
+                                        # ),
+                                    ],  
+                                ),
+                            ),
                         ),
-
-                    ]
+                    ],
                 ),
-                html.Br(), 
-                #html.Br(),                            
-            ]
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            dbc.Card(
+                                dbc.CardBody(
+                                    #label="Word Sentiment",
+                                    #id='tab_three',
+                                    #children=
+                                        [
+                                            html.Div(
+                                            dcc.Graph(id='tab_one_graph'),
+                                            ),
+                                            # html.Div(
+                                            # dcc.Graph(id='tab_three_graph')
+                                            # ),
+                                        ],
+
+                                ),
+                            ),
+                        ),
+                        dbc.Col(),
+                    ],
+                ),
+            ],
         ),
-        
     ],
-    #style={"width": "40rem"},
-)
+),
+                    
+
+
+                
+                # html.H4("Data Exploration", className="card-title"),
+                # html.P("Select a dataset to explore."),
+                
+                ## Parent tabs app ##
+                # html.Br(),
+                # dbc.Tabs(
+                #     [
+                #         dbc.Tab(label="Star Distribution",
+                #             id='tab_one',
+                #             children= 
+                #                     [
+                #                         html.Div(
+                #                         dcc.Graph(id='tab_one_graph'),
+                #                         )
+                #                     ],  
+                #         ),             
+                        # dbc.Tab(label="Length vs Rating",
+                        #     id='tab_two',
+                        #     children=
+                        #             [
+                        #                 html.Div(
+                        #                 dcc.Graph(id='tab_two_graph')
+                        #                 )
+                        #             ]
+                        # ),
+#                         dbc.Tab(label="Word Sentiment",
+#                             id='tab_three',
+#                             children=
+#                                     [
+#                                         html.Div(
+#                                         dcc.Graph(id='tab_three_graph')
+#                                         )
+#                                     ]
+#                         ),
+
+#                     ]
+#                 ),
+#                 html.Br(), 
+#                 #html.Br(),                            
+#             ]
+#         ),
+        
+#     ],
+#     #style={"width": "40rem"},
+# )
 
 """Body"""
 body = html.Div(
@@ -269,12 +344,12 @@ body = html.Div(
                                         dbc.Col(
                                             [
                                             html.Div(card)
-                                            ],
+                                            ], width=4,
                                         ),
                                         dbc.Col(
                                             [
                                                 html.Div(card_two)
-                                            ], width=7,
+                                            ], width=8,
                                         ), 
                                     ], 
                                     
@@ -506,12 +581,15 @@ def update_fig(n1, n2):
     box_layout = go.Layout(
     title = "Length of Review per Star Rating",
     xaxis_title="Star Rating",
-    yaxis_title="Length of Review"
+    yaxis_title="Length of Review",
+    autosize=False,
+    height=300,
+    width=550
     )
     fig_data=[]
     ds = dfs[int_dataset]
     ds['x'] = ds.index
-    fig = px.bar(ds, x='x', y="stars", barmode="group", labels={"x":"Star Rating", "stars":"Number of Reviews"}, color="x")
+    fig = px.bar(ds, x='x', y="stars", barmode="group", labels={"x":"Star Rating", "stars":"Number of Reviews"}, color="x", height=375, width=500,)
     fig2 = go.Figure(data=data, layout=box_layout)
     fig_data.append(fig2)
     #print(ds)
@@ -527,24 +605,24 @@ def show_pies(n1, n2):
     #fig3 = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
     if not n1 and not n2:
         fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
-        #fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=300)
     
     if n1 and not n2:
         fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
-        #fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=300)
     
     if n1 and n2:
         if n1 > n2:
             fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
-            #fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+            fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=300)
 
         if n2 > n1:
             fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=balanced_values, pull= [0.2, 0.2, 0], name="Balanced")])
-            #fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+            fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=300)
     
     else:
         fig3 = go.Figure(data=[go.Pie(labels=ub_labels, values=balanced_values, pull= [0.2, 0.2, 0], name="Balanced")])
-        #fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=300)
     #print(n1)
     return fig3
 
