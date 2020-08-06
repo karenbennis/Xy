@@ -148,6 +148,9 @@ We have observed that the acurracy decreases as we increase the number of catego
 
 Based on this data exploration, it seems reviewers may not be expressing themselves in writing in a way that clearly represents their sentiment in terms of star rating.
 
+We have chosen to use our dashboard (app.py) to show the data exploration journey as well as apply the machine learning to user input. Below is a screenshot of our dashboard:
+![](https://github.com/karenbennis/Xy/blob/master/Visuals/Dashboard.png)
+
 The limitations were as follows:
 - The Neural Network model requires too much RAM in Colab
 - The large dataset we intended to use was proved to be too much for Colab
