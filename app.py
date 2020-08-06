@@ -159,7 +159,7 @@ balanced_values = balanced_pie_df['value']
 
 """Cards"""
 
-# Card 1
+# Card 1 - Predict user sentiment
 card = dbc.Card(
     [
         # Machine learning image
@@ -201,7 +201,7 @@ card = dbc.Card(
     ],
 )
 
-# Card 2
+# Card 2 - Data exploration 
 card_two = dbc.Card(
     [
         dbc.CardBody(
@@ -271,6 +271,7 @@ card_two = dbc.Card(
                     
 
 """Body"""
+# Formats body the two man cards into columns and rows to be passed to final layout
 body = html.Div(
     [
         dbc.Card(
@@ -550,27 +551,36 @@ def show_pies(n1, n2):
     #fig3 = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
     if not n1 and not n2:
         fig3 = go.Figure(data=[go.Pie(labels=balanced_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
-        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Sum of Positive and Negative Words", title_x=0.5)
+        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Proportion of Word Sentiment", title_x=0.5)
+        return fig3
     
     if n1 and not n2:
         fig3 = go.Figure(data=[go.Pie(labels=balanced_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
-        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Sum of Positive and Negative Words", title_x=0.5)
-    
+        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Proportion of Word Sentiment", title_x=0.5)
+        return fig3
+        
     if n1 and n2:
         if n1 > n2:
             fig3 = go.Figure(data=[go.Pie(labels=balanced_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
-            fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Sum of Positive and Negative Words", title_x=0.5)
+            fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Proportion of Word Sentiment", title_x=0.5)
+            return fig3
 
         if n2 > n1:
             fig3 = go.Figure(data=[go.Pie(labels=balanced_labels, values=balanced_values, pull= [0.2, 0.2, 0], name="Balanced")])
-            fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Sum of Positive and Negative Words", title_x=0.5)
-        
+            fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Proportion of Word Sentiment", title_x=0.5)
+            return fig3
+
+    if n2 and not n1:
+        fig3 = go.Figure(data=[go.Pie(labels=balanced_labels, values=balanced_values, pull= [0.2, 0.2, 0], name="Balanced")])
+        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Proportion of Word Sentiment", title_x=0.5)
+        return fig3
     
     else:
-        fig3 = go.Figure(data=[go.Pie(labels=balanced_labels, values=balanced_values, pull= [0.2, 0.2, 0], name="Balanced")])
-        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Sum of Positive and Negative Words", title_x=0.5)
+        fig3 = go.Figure(data=[go.Pie(labels=balanced_labels, values=ub_values, pull= [0.2, 0.2, 0], name="Unbalanced")])
+        fig3.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=200, title="Proportion of Word Sentiment", title_x=0.5)
+        return fig3
     #print(n1)
-    return fig3
+    #return fig3
 
 
 # """End App Callback"""
