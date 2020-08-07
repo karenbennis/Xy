@@ -39,7 +39,7 @@ Originally, we'd hoped to build a neural network machine learning model that pre
 
 ### Research questions
 - Can NLP be used to predict sentiment of Yelp reviews?
-- Can accuracy of NLP model be improved by using larger datasets?
+- Which machine learning model predicts Yelp sentiment with the highest accuracy?
 
 ### Resources
 - Technologies / Tools: Google Cloud Storage, Google Colaboratory, PostgreSQL, PgAdmin, Plotly-dash
