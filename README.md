@@ -109,7 +109,7 @@ Unfortunately, similar patterns to those observed in the sample dataset were obs
 
 ![](https://github.com/karenbennis/Xy/blob/master/Visuals/Facet-balanced.png)
 ![](https://github.com/karenbennis/Xy/blob/master/Visuals/Boxplot-balanced.png)
-![](https://github.com/karenbennis/Xy/blob/master/Visuals/Violin-balanced.png
+![](https://github.com/karenbennis/Xy/blob/master/Visuals/Violin-balanced.png)
 
 We concluded that star rating does not seem to relate to any of the factors considered in such a profound way. At a higher level, this demonstrates the need for NLP analysis to predict sentiment.
 
